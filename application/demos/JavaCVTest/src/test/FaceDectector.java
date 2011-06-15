@@ -144,10 +144,7 @@ public class FaceDectector extends JFrame {
 		return updateFaces(106,80);
 	}
 	public static void main(String [] args){
-		boolean UseHighSpeedImaging = false;
-		if(OSUtil.isLinux()){
-			UseHighSpeedImaging = true;
-		}
+		boolean UseHighSpeedImaging = OSUtil.isLinux();
 		try{
 			FaceDectector f;
 			if(UseHighSpeedImaging)
