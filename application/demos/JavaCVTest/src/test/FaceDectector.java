@@ -12,8 +12,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-//import java.nio.ByteBuffer;
-//import java.util.concurrent.ExecutorService;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -22,11 +20,11 @@ import javax.swing.JPanel;
 
 import com.googlecode.javacpp.Loader;
 import com.googlecode.javacv.OpenCVFrameGrabber;
-import com.googlecode.javacv.cpp.opencv_objdetect;
 import com.googlecode.javacv.cpp.opencv_core.CvMemStorage;
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 import com.googlecode.javacv.cpp.opencv_core.CvSeq;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
+import com.googlecode.javacv.cpp.opencv_objdetect;
 import com.googlecode.javacv.cpp.opencv_objdetect.CvHaarClassifierCascade;
 import com.neuronrobotics.video.Camera;
 import com.neuronrobotics.video.OSUtil;
