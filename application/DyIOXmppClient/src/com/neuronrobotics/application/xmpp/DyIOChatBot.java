@@ -19,7 +19,19 @@ public class DyIOChatBot implements IConversationFactory{
 	 * @param args
 	 * @throws InterruptedException 
 	 */
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) {
+		if(args.length<1){
+			System.err.println("You must specify a login credentials file");
+		}
+		FileInputStream f = null;
+		try {
+			f= new FileInputStream(new File(args[0]));
+		} catch (FileNotFoundException e) {
+			
+			e.printStackTrace();
+			System.err.println(args[0]+" is not a valid file.\nYou must specify a login credentials file");
+			System.exit(1);
+		}
         System.out.println("Starting IM client");
         BowlerAbstractConnection c = ConnectionDialog.promptConnection();
         if(c==null){
@@ -30,15 +42,11 @@ public class DyIOChatBot implements IConversationFactory{
         DyIORegestry.setConnection(c);
         GoogleChatEngine eng = null;
 		try {
-			eng = new GoogleChatEngine(new DyIOConversationFactory(),new FileInputStream(new File(args[0])));
+			eng = new GoogleChatEngine(new DyIOConversationFactory(),f);
 			//eng.startChat("mad.hephaestus@gmail.com");
 		} catch (XMPPException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-			System.exit(1);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			System.exit(1);
 		}
         
