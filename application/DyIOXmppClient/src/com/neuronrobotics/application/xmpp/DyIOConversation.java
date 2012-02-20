@@ -59,7 +59,7 @@ public class DyIOConversation implements IConversation, MessageListener {
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}
-			return "error: Mode not settible on channel #"+packet[1]+" mode options are:\n"+options+"\n"+DyIORegestry.get().toString();
+			return "error: Mode not settible on channel #"+packet[1]+" mode options are:\n"+options;
 		}else if(packet[0].toLowerCase().contains("setvalue")){
 			int port = Integer.parseInt(packet[1]);
 			int value = Integer.parseInt(packet[2]);
