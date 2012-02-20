@@ -80,8 +80,8 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 			}catch (Exception ex){
 				rate = 500;
 			}
-			if(rate < 200)
-				rate = 200;
+			if(rate < 500)
+				rate = 500;
 			DyIORegestry.get().getChannel(port).setAsync(true);
 			DyIORegestry.get().getChannel(port).configAdvancedAsyncNotEqual(rate);
 			DyIORegestry.get().getChannel(port).addChannelEventListener( getListener(chat, from));
