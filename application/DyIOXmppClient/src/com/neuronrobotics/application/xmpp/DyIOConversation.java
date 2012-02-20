@@ -161,10 +161,12 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 				"Commands are: \n" ;
 		s+="ping \tnone \tnone :returns ping message\n";
 		s+="state \tnone \tnone :returns state information\n";
+		s+="reset \tnone \tnone :returns none Removes all async listeners\n";
 		s+="setMode \t(int)channel \t(String)mode :returns the mode if successful, 'error' if not sucessful\n";
 		s+="setValue \t(int)channel \t(int)value :returns the value if successful, 'error' if not sucessful\n";
 		s+="getValue \t(int)channel \tnone :returns (int)value\n";
 		s+="addAsync \t(int)channel \t(int)update rate in Ms :returns (int)value: Async of any incoming data\n";
+		s+="removeAsync \t(int)channel \tnone :returns none Removes one async listener\n";
 		return s;
 	}
 
