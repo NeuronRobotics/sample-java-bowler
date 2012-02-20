@@ -15,7 +15,7 @@ public class GoogleChatConversation implements  MessageListener,IConversation{
 		 myIndex = numConversations++;
 	}
 	@Override
-	public String onMessage(String input) {
+	public String onMessage(String input,Chat chat, String from) {
 		
 		return "I am Artillect bot index: "+myIndex+". You said: " + input;
 	}
@@ -25,7 +25,7 @@ public class GoogleChatConversation implements  MessageListener,IConversation{
 	    if(message.getType().equals(Message.Type.chat) && message.getBody() != null) {
 	        System.out.println("Received: " + message.getBody());
 	        try {
-	        	msg.setBody(onMessage(message.getBody()));
+	        	msg.setBody(onMessage(message.getBody(),chat, message.getFrom()));
 	        	System.out.println("Sending: "+msg.getBody());
 	            chat.sendMessage(msg);
 	        } catch (XMPPException ex) {
