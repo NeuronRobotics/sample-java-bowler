@@ -71,8 +71,14 @@ public class DyIOConversation implements IConversation, MessageListener {
 			return "getValue "+port+" "+value;
 		}else if(packet[0].toLowerCase().contains("addasync")){
 			int port = Integer.parseInt(packet[1]);
+			int rate = 500;
+			try{
+				rate = Integer.parseInt(packet[2]);
+			}catch (Exception ex){
+				rate = 500;
+			}
 			DyIORegestry.get().getChannel(port).setAsync(true);
-			DyIORegestry.get().getChannel(port).configAdvancedAsyncNotEqual(500);
+			DyIORegestry.get().getChannel(port).configAdvancedAsyncNotEqual(rate);
 			DyIORegestry.get().getChannel(port).addChannelEventListener(new ChatAsyncListener(chat, from, port));
 			return "async "+port;
 		}else{
@@ -123,6 +129,7 @@ public class DyIOConversation implements IConversation, MessageListener {
 		s+="setMode \t(int)channel \t(String)mode :returns the mode if successful, 'error' if not sucessful\n";
 		s+="setValue \t(int)channel \t(int)value :returns the value if successful, 'error' if not sucessful\n";
 		s+="getValue \t(int)channel \tnone :returns (int)value\n";
+		s+="addAsync \t(int)channel \t(int)update rate in Ms :returns (int)value: Async of any incoming data\n";
 		return s;
 	}
 
