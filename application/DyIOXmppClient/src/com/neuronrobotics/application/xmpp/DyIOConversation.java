@@ -1,5 +1,6 @@
 package com.neuronrobotics.application.xmpp;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 
 import org.jivesoftware.smack.Chat;
@@ -13,8 +14,10 @@ import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 
-public class DyIOConversation implements IConversation, MessageListener {
-
+public class DyIOConversation implements IConversation, MessageListener, IChannelEventListener {
+	private ArrayList<ChatAsyncListener> listeners = new ArrayList<ChatAsyncListener>();
+	
+	
 	public void processMessage(Chat chat, Message message) {
 		Message msg = new Message(message.getFrom(), Message.Type.chat);
 	    if(message.getType().equals(Message.Type.chat) && message.getBody() != null) {
@@ -77,28 +80,47 @@ public class DyIOConversation implements IConversation, MessageListener {
 			}catch (Exception ex){
 				rate = 500;
 			}
+			if(rate < 200)
+				rate = 200;
 			DyIORegestry.get().getChannel(port).setAsync(true);
 			DyIORegestry.get().getChannel(port).configAdvancedAsyncNotEqual(rate);
-			DyIORegestry.get().getChannel(port).addChannelEventListener(new ChatAsyncListener(chat, from, port));
-			return "async "+port;
+			DyIORegestry.get().getChannel(port).addChannelEventListener( getListener(chat, from));
+			return "async "+port+" "+rate;
 		}else{
 			return help();
 		}
 	}
 	
+	private ChatAsyncListener getListener(Chat c,String from){
+		ChatAsyncListener back=null;
+		for(ChatAsyncListener l:listeners ){
+			if(l.getFrom().equals(from) && l.getChat()==c){
+				back = l;
+				System.out.println("Found old listener");
+			}
+		}
+		if(back == null){
+			System.out.println("Adding new listener");
+			back = new ChatAsyncListener(c, from);
+			listeners.add(back);
+		}
+		return back;
+	}
+	
 	private class ChatAsyncListener implements IChannelEventListener{
 		private Chat chat;
 		private String from;
-		private final int channel;
-		public ChatAsyncListener(Chat c,String from, int channel){
-			this.channel = channel;
+		public ChatAsyncListener(Chat c,String from){
 			setChat(c);
-			this.from = from;
+			this.setFrom(from);
+		}
+		public Chat getChat() {
+			return chat;
 		}
 		@Override
 		public void onChannelEvent(DyIOChannelEvent e) {
-			Message msg = new Message(from, Message.Type.chat);
-			String body = "asyncData "+channel+" "+e.getValue();
+			Message msg = new Message(getFrom(), Message.Type.chat);
+			String body = "asyncData "+e.getChannel().getChannelNumber()+" "+e.getValue();
 			msg.setBody(body);
 			System.err.println("async: "+msg.getBody());
             try {
@@ -111,10 +133,12 @@ public class DyIOConversation implements IConversation, MessageListener {
 		public void setChat(Chat chat) {
 			this.chat = chat;
 		}
-		public Chat getChat() {
-			return chat;
+		public void setFrom(String from) {
+			this.from = from;
 		}
-		
+		public String getFrom() {
+			return from;
+		}
 	}
 	
 	private String help(){
@@ -131,6 +155,12 @@ public class DyIOConversation implements IConversation, MessageListener {
 		s+="getValue \t(int)channel \tnone :returns (int)value\n";
 		s+="addAsync \t(int)channel \t(int)update rate in Ms :returns (int)value: Async of any incoming data\n";
 		return s;
+	}
+
+	@Override
+	public void onChannelEvent(DyIOChannelEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
