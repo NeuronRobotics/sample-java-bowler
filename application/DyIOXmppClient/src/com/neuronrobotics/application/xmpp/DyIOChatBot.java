@@ -47,6 +47,10 @@ public class DyIOChatBot implements IConversationFactory{
 		} catch (XMPPException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			System.err.println("Login failed! please use the following format for credentials file:\n<login>\n"+
+"	<username>user@gmail.com</username>\n"+
+"	<password>pass1234</password>\n"+
+"</login>\n");
 			System.exit(1);
 		}
         
