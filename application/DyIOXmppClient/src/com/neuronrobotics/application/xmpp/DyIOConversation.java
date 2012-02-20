@@ -86,6 +86,17 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 			DyIORegestry.get().getChannel(port).configAdvancedAsyncNotEqual(rate);
 			DyIORegestry.get().getChannel(port).addChannelEventListener( getListener(chat, from));
 			return "async "+port+" "+rate;
+		}
+		else if(packet[0].toLowerCase().contains("removeasync")){
+			int port = Integer.parseInt(packet[1]);
+			DyIORegestry.get().getChannel(port).removeChannelEventListener( getListener(chat, from));
+			return "async removed "+port+" ";
+		}
+		else if(packet[0].toLowerCase().contains("reset")){
+			for (int i=0;i<24;i++){
+				DyIORegestry.get().getChannel(i).removeAllChannelEventListeners();
+			}
+			return "system reset!";
 		}else{
 			return help();
 		}
