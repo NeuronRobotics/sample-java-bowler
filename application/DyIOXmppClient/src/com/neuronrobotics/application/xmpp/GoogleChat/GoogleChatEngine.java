@@ -37,6 +37,12 @@ public class GoogleChatEngine implements ChatManagerListener {
 	
 	private static String username = "user@gmail.com";
 	private static String password = "pass1234";
+	
+	
+	private static String host = "talk.google.com";
+	private static String service = "gmail.com";
+	private static int port = 5222;
+	
 	private ConnectionConfiguration connConfig;
 	private XMPPConnection connection;
 	private Presence presence;
@@ -47,7 +53,7 @@ public class GoogleChatEngine implements ChatManagerListener {
 		this.responder = responder;
 		if((MessageListener.class.isInstance(responder)))
 			throw new RuntimeException("Instance of IConversationFactory must also implement org.jivesoftware.smack.MessageListener");
-		connConfig = new ConnectionConfiguration("talk.google.com", 5222, "gmail.com");
+		connConfig = new ConnectionConfiguration(host, port, service);
         connection = new XMPPConnection(connConfig);
         connection.connect();
         setLoginInfo(config);
@@ -80,6 +86,7 @@ public class GoogleChatEngine implements ChatManagerListener {
 			Element eElement = (Element)nList.item(temp);
 			username = getTagValue("username",eElement);
 	    	password = getTagValue("password",eElement);
+	    	
 		}
 	}
 	
@@ -130,35 +137,5 @@ public class GoogleChatEngine implements ChatManagerListener {
 	public void disconnect(){
 		connection.disconnect();
 	}
-	    
-	    
-	public static void main( String[] args ) throws InterruptedException {
-	        
-        System.out.println("Starting IM client");
-        GoogleChatEngine eng = null;
-		try {
-			eng = new GoogleChatEngine(new GoogleChatConversationFactory(),GoogleChatEngine.class.getResourceAsStream("loginInfo.xml"));
-			//eng.startChat("mad.hephaestus@gmail.com");
-		} catch (XMPPException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			System.exit(1);
-		}
-        
-//		try {
-//			eng.getChats().get(0).sendMessage("Test From Artillect");
-//		} catch (XMPPException e1) {
-//			e1.printStackTrace();
-//		}       
-		System.out.println("Press enter to disconnect");
-        
-        try {
-            System.in.read();
-        } catch (IOException ex) {
-            //ex.printStackTrace();
-        }
-		eng.disconnect();
-	}
-
 
 }
