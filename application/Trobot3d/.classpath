@@ -12,6 +12,7 @@
 	<classpathentry kind="lib" path="lib/j3dcore.jar"/>
 	<classpathentry kind="lib" path="lib/j3dutils.jar"/>
 	<classpathentry kind="lib" path="lib/vecmath.jar"/>
-	<classpathentry kind="lib" path="lib/aim-lab-java-lib-3.8.2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AimLabJavaLib"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NRSDK"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

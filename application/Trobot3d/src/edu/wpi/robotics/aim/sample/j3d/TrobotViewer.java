@@ -56,7 +56,7 @@ public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListener{
 	
 	public TrobotViewer(TrobotKinematics bot){
 		robot = bot;
-		robot.addJointSpaceListener(this);
+		
 		JPanel controls = new JPanel(new MigLayout());
 		
         setLayout(new BorderLayout());
@@ -74,7 +74,7 @@ public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListener{
         dh = new DHViewer(robot.getDhChain(), robot.getCurrentJointSpaceVector());
         add("North", controls);
         add("Center", dh);
-
+        robot.addJointSpaceListener(this);
         
 	}
 

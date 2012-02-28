@@ -18,14 +18,19 @@ public  class DHChain {
 	private final double[] lowerLimits;
 	private boolean debug=false;
 	private DHViewer viewer=null;
+	JFrame frame; 
 	public DHChain(double [] upperLimits,double [] lowerLimits, boolean debugViewer ) {
 		this(upperLimits, lowerLimits);
-		this.debug=true;
-		viewer=new DHViewer(this, new double[]{0,0,0,0,0,0});
-	}
-	
-	private DHViewer getViewer(){
-		return viewer;
+		if(debugViewer){
+			this.debug=true;
+			viewer=new DHViewer(this, new double[]{0,0,0,0,0,0});
+			frame = new JFrame();
+			frame.getContentPane().add(viewer);
+			frame.setSize(1024, 768);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setLocationRelativeTo(null);
+			frame.setVisible(true);
+		}
 	}
 	
 	public DHChain(double [] upperLimits,double [] lowerLimits ) {
@@ -56,7 +61,8 @@ public  class DHChain {
 		double vect=0;
 		double orent = 0;
 		do{
-			for(int i=increments.length-1;i>=0;i--){
+			int len  = increments.length-1;
+			for(int i=len;i>=0;i--){
 				increments[i].step();
 			}
 			if(debug){
@@ -65,7 +71,7 @@ public  class DHChain {
 			}
 			vect = forwardKinematics(jointSpaceVector).getOffsetVectorMagnitude(target);
 			orent = forwardKinematics(jointSpaceVector).getOffsetOrentationMagnitude(target);
-		}while(++iter<800 && (vect >6 || orent > .001));//preincrement and check
+		}while(++iter<1500 && (vect >2 || orent > .001));//preincrement and check
 		if(debug)
 			System.out.println("Finished iteration, numer of iterations #"+iter+" final offset= "+vect+" final orent= "+orent);
 		
@@ -100,7 +106,7 @@ public  class DHChain {
 			Transform step = links.get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
 			//System.out.println("Current:\n"+current+"Step:\n"+step);
 			current = current.times(step);
-			chain.add(current.copy());
+			chain.add(current);
 		}
 		//System.out.println("Final:\n"+current);
 		return current;
@@ -136,7 +142,10 @@ public  class DHChain {
 			upper = u;
 			lower = l;
 		}
-		public void step() {
+		public void step(){
+			stepIncrementWithOrent(true);
+		}
+		public boolean stepIncrementWithOrent(boolean withOrent) {
 			double none =  myStart+offset;
 			
 			jointSpaceVector[index]= bound (none);
@@ -145,7 +154,7 @@ public  class DHChain {
 			double nonevect = tmp.getOffsetVectorMagnitude(target);
 			double noneOrent = tmp.getOffsetOrentationMagnitude(target);
 			
-			increment = nonevect/500+noneOrent;
+			increment = nonevect/1000+noneOrent;
 			
 			double up = myStart+offset+increment;
 			double down =myStart+offset-increment;
@@ -161,18 +170,20 @@ public  class DHChain {
 			double downOrent = tmp.getOffsetOrentationMagnitude(target);
 			
 			
-			if((upvect>nonevect && downvect>nonevect)  || (upOrent>noneOrent && downOrent>noneOrent)){
+			if((upvect>nonevect && downvect>nonevect)  || (upOrent>noneOrent && downOrent>noneOrent && withOrent)){
 				jointSpaceVector[index]=none;
-				
 			}
-			if((nonevect>upvect && downvect>upvect )  || ( noneOrent>upOrent && downOrent>upOrent)){
+			if((nonevect>upvect && downvect>upvect )  || ( noneOrent>upOrent && downOrent>upOrent && withOrent)){
 				jointSpaceVector[index]=up;
 				offset+=increment;
+				return false;
 			}
-			if((upvect>downvect && nonevect>downvect)  || (upOrent>downOrent && noneOrent>downOrent )){
+			if((upvect>downvect && nonevect>downvect)  || (upOrent>downOrent && noneOrent>downOrent && withOrent )){
 				jointSpaceVector[index]=down;
 				offset-=increment;
+				return false;
 			}
+			return true;
 			
 		}
 		double bound(double in){
@@ -187,13 +198,9 @@ public  class DHChain {
 	}
 	
 	public static void main(String [] args){
-		JFrame frame = new JFrame();
-		DHChain tk = new DHChain(new double[]{180,180,180,180,180,180}, new double[]{-180,-180,-180,-180,-180,-180}, true);
-		frame.getContentPane().add(tk.getViewer());
-		frame.setSize(1024, 768);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
+
+		DHChain tk = new DHChain(new double[]{90,90,90,90,90,90}, new double[]{-90,-90,-90,-90,-90,-90}, true);
+
 		ThreadUtil.wait(2000);
 //		Transform target = new Transform(new Matrix(new double [][] {
 //				{ -000.46,	0000.63,	-000.63,	-252.29	 },
@@ -202,8 +209,10 @@ public  class DHChain {
 //				{ 0000.00,	0000.00,	0000.00,	0001.00	 }
 //				}));
 		// the expected Joint space vector is { -10,45,-45,45,45,45}
+		//double [] targetVect = new double [] { -85,10,-90,0,90,90};
 		double [] targetVect = new double [] { -10,45,-45,45,45,45};
 		Transform target = tk.forwardKinematics(targetVect);
+		Transform home = tk.forwardKinematics(new  double [] {0,0,0,0,0,0});
 		try {
 			double [] back = tk.inverseKinematics(target, new  double [] {0,0,0,0,0,0});
 			System.out.print("\nJoint angles targeted: {");
@@ -211,9 +220,22 @@ public  class DHChain {
 				System.out.print(" "+targetVect[i]);
 			}
 			System.out.print("} \n");
-			System.out.print("\nJoint angles got: {");
+			System.out.print("\nJoint angles difference: {");
 			for(int i=0;i<6;i++){
-				System.out.print(" "+back[i]);
+				System.out.print(" "+(back[i]-targetVect[i]));
+			}
+			System.out.print("} \n");
+			System.out.println("Attempted\n"+target+"\nArrived at \n"+tk.forwardKinematics(back));
+			
+			back = tk.inverseKinematics( home,back);
+			System.out.print("\nJoint angles targeted: {");
+			for(int i=0;i<6;i++){
+				System.out.print(" "+targetVect[i]);
+			}
+			System.out.print("} \n");
+			System.out.print("\nJoint angles difference: {");
+			for(int i=0;i<6;i++){
+				System.out.print(" "+(back[i]-targetVect[i]));
 			}
 			System.out.print("} \n");
 			System.out.println("Attempted\n"+target+"\nArrived at \n"+tk.forwardKinematics(back));

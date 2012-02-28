@@ -12,15 +12,16 @@ import edu.wpi.robotics.aim.core.robot.AbstractKinematics;
 public class TrobotKinematics extends AbstractKinematics {
 	
 	private DHChain chain=null;
-	
+
 	public TrobotKinematics() {
 		super(XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"),new LinkFactory());
-		chain = new DHChain(getFactory().getUpperLimits(), getFactory().getLowerLimits());
+		chain = new DHChain(getFactory().getUpperLimits(), getFactory().getLowerLimits(),true);
 	}
 	
 	public TrobotKinematics( DyIO dev) {
 		super(XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"),new LinkFactory( dev));
-		chain = new DHChain(getFactory().getUpperLimits(), getFactory().getLowerLimits());
+		chain = new DHChain(getFactory().getUpperLimits(), getFactory().getLowerLimits(),true);
+
 	}
 
 	@Override

@@ -17,11 +17,11 @@ import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import edu.wpi.robotics.aim.sample.gui.SampleGui;
 
 public class TrobotGuiMain {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
+	double [] startVect = new double [] { 0,0,0,0,0,0};
+	TrobotKinematics model;
+	
+	private TrobotGuiMain(){
+		
 		try{
 			final SampleGui gui = new SampleGui();
 			final JFrame frame = new JFrame();
@@ -42,7 +42,7 @@ public class TrobotGuiMain {
 					if(!mcon.connect()){
 						throw new RuntimeException("Not a bowler Device on connection: "+connection);
 					}
-					TrobotKinematics model = new TrobotKinematics(mcon);
+					model = new TrobotKinematics(mcon);
 					gui.setKinematicsModel(model);
 					try{
 						tabs.add("Display",new TrobotViewer(model));
@@ -55,6 +55,7 @@ public class TrobotGuiMain {
 					}
 					frame.pack();
 					frame.setLocationRelativeTo(null);
+					zero();
 				}
 			});
 			connectVirtual.addActionListener(new ActionListener() {
@@ -65,7 +66,7 @@ public class TrobotGuiMain {
 					 * First create the Bowler device connection
 					 */
 
-					TrobotKinematics model = new TrobotKinematics();
+					model = new TrobotKinematics();
 					gui.setKinematicsModel(model);
 					try{
 						tabs.add("Display",new TrobotViewer(model));
@@ -78,6 +79,7 @@ public class TrobotGuiMain {
 					}
 					frame.pack();
 					frame.setLocationRelativeTo(null);
+					zero();
 				}
 			});
 			starter.add(connectReal);
@@ -96,5 +98,22 @@ public class TrobotGuiMain {
 			ex.printStackTrace();
 			System.exit(1);
 		}
+		
+	}
+	
+	private void zero(){
+		try {
+			model.setDesiredJointSpaceVector(startVect, 2);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		new TrobotGuiMain();
 	}
 }
