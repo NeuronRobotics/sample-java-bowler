@@ -38,7 +38,7 @@ public class GradiantDecent {
 			}
 			vect = dhChain.forwardKinematics(jointSpaceVector).getOffsetVectorMagnitude(target);
 			orent = dhChain.forwardKinematics(jointSpaceVector).getOffsetOrentationMagnitude(target);
-			notArrived = (vect > .1|| orent > .001);
+			notArrived = (vect > 10|| orent > .001);
 			if(stopped == true && notArrived == true){
 				stopped = false;
 				for(int i=0;i<increments.length;i++){

@@ -24,7 +24,7 @@ public class GradiantDecentNode{
 	double intOrent[] = new double[integralSize]; 
 	
 	double Kp = 1;
-	double Ki = 4;
+	double Ki = 0;
 	
 	public GradiantDecentNode(DHChain chain,int index,double[] jointSpaceVector,Transform cartesianSpace, double u, double l){
 		this.chain = chain;
@@ -49,8 +49,8 @@ public class GradiantDecentNode{
 		double nonevect = tmp.getOffsetVectorMagnitude(target);
 		double noneOrent = tmp.getOffsetOrentationMagnitude(target);
 		
-		double incVectP = (nonevect/400);// Divide by magic number
-		double incOrentP = (noneOrent*3);//Multiply by magic number
+		double incVectP = (nonevect/1000);// Divide by magic number
+		double incOrentP = (noneOrent*10);//Multiply by magic number
 		//Remove old values off rolling buffer
 		integralTotalVect-=intVect[integralIndex];
 		integralTotalOrent-=intOrent[integralIndex];
