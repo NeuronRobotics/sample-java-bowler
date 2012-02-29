@@ -49,8 +49,10 @@ public  class DHChain {
 	}
 
 	public double[] inverseKinematics(Transform target,double[] jointSpaceVector )throws Exception {
+		
 		if(links == null)
 			return null;
+		long start = System.currentTimeMillis();
 		double [] inv = new double[links.size()];	
 		
 		Estimation [] increments = new Estimation[links.size()];	
@@ -60,38 +62,46 @@ public  class DHChain {
 		int iter=0;
 		double vect=0;
 		double orent = 0;
+		boolean stopped;
+		boolean notArrived = false;
+		boolean [] stop = new boolean [increments.length];
 		do{
-			int len  = increments.length-1;
-			for(int i=len;i>=0;i--){
-				increments[i].step();
-			}
-			if(debug){
-				viewer.updatePoseDisplay(getChain(jointSpaceVector));
-				ThreadUtil.wait(20);
+			stopped = true;
+			for(int i=increments.length-1;i>=0;i--){
+			//for(int i=0;i<increments.length;i++){
+				stop[i]=increments[i].step();
+				if(!stop[i]){
+					stopped = false;
+				}
 			}
 			vect = forwardKinematics(jointSpaceVector).getOffsetVectorMagnitude(target);
 			orent = forwardKinematics(jointSpaceVector).getOffsetOrentationMagnitude(target);
-		}while(++iter<1500 && (vect >2 || orent > .001));//preincrement and check
+			notArrived = (vect > 10.0|| orent > .001);
+			if(stopped == true && notArrived == true){
+				stopped = false;
+				for(int i=0;i<increments.length;i++){
+					increments[i].jitter();
+				}
+				//ThreadUtil.wait(100);
+			}
+			if(debug){
+//				System.out.print("\nJoint angles current: {");
+//				for(int i=0;i<jointSpaceVector.length;i++){
+//					System.out.print(" "+jointSpaceVector[i]+ " St="+stop[i]);
+//				}
+//				System.out.print("} \n");
+				viewer.updatePoseDisplay(getChain(jointSpaceVector));
+				//ThreadUtil.wait(10);
+			}
+		}while(++iter<1000 && notArrived && stopped == false);//preincrement and check
 		if(debug)
-			System.out.println("Finished iteration, numer of iterations #"+iter+" final offset= "+vect+" final orent= "+orent);
+			System.out.println("Numer of iterations #"+iter+" \n\tStopped = "+stopped+" \n\tArrived = "+!notArrived+" \n\tFinal offset= "+vect+" \n\tFinal orent= "+orent);
 		
 		for(int i=0;i<inv.length;i++){
 			inv[i]=jointSpaceVector[i];
 		}
 		
-//		//Dump from cartesian to joint space, used as an example
-//		inv[0]= cartesianSpaceVector.getX();
-//		inv[1]= cartesianSpaceVector.getY();
-//		inv[2]= cartesianSpaceVector.getZ();
-//		
-//		Matrix rotationMatrixArray = new Matrix(cartesianSpaceVector.getRotation().getRotationMatrix()); 
-//		
-//		//X rotation
-//		inv[3]=Math.atan2(-rotationMatrixArray.get(1, 2), rotationMatrixArray.get(2, 2))*180/Math.PI;
-//		//Y rotation
-//		inv[4]=Math.asin(rotationMatrixArray.get(0, 2))*180/Math.PI;		
-//		//Z rotation
-//		inv[5]=Math.atan2(-rotationMatrixArray.get(0, 1), rotationMatrixArray.get(0, 0))*180/Math.PI;
+		System.out.println("Inverse Kinematics took "+(System.currentTimeMillis()-start)+"ms");
 		return inv;
 	}
 
@@ -128,7 +138,7 @@ public  class DHChain {
 		Transform target;
 		int index;
 		double offset;
-		double increment=.2;
+
 		double myStart=0;
 		double[] jointSpaceVector;
 		double upper;
@@ -142,61 +152,83 @@ public  class DHChain {
 			upper = u;
 			lower = l;
 		}
-		public void step(){
-			stepIncrementWithOrent(true);
-		}
-		public boolean stepIncrementWithOrent(boolean withOrent) {
+		public boolean step() {
 			double none =  myStart+offset;
-			
+			double start = offset;
 			jointSpaceVector[index]= bound (none);
 			Transform tmp =forwardKinematics(jointSpaceVector);
 			tmp =forwardKinematics(jointSpaceVector);
 			double nonevect = tmp.getOffsetVectorMagnitude(target);
 			double noneOrent = tmp.getOffsetOrentationMagnitude(target);
 			
-			increment = nonevect/1000+noneOrent;
+			double increment = (nonevect/500);// Divide by magic number
+			double incrementOrent = (noneOrent*10);//Multiply by magic number
 			
 			double up = myStart+offset+increment;
 			double down =myStart+offset-increment;
 			
+			double upO = myStart+offset+incrementOrent;
+			double downO =myStart+offset-incrementOrent;
+			
 			jointSpaceVector[index]= bound (up);
 			tmp =forwardKinematics(jointSpaceVector);
 			double upvect = tmp.getOffsetVectorMagnitude(target);
+			jointSpaceVector[index]= bound (upO);
+			tmp =forwardKinematics(jointSpaceVector);
 			double upOrent = tmp.getOffsetOrentationMagnitude(target);
 			
 			jointSpaceVector[index]= bound (down);
 			tmp =forwardKinematics(jointSpaceVector);
 			double downvect = tmp.getOffsetVectorMagnitude(target);
+			jointSpaceVector[index]= bound (downO);
+			tmp =forwardKinematics(jointSpaceVector);
 			double downOrent = tmp.getOffsetOrentationMagnitude(target);
 			
-			
-			if((upvect>nonevect && downvect>nonevect)  || (upOrent>noneOrent && downOrent>noneOrent && withOrent)){
+
+			if((upvect>nonevect && downvect>nonevect)  && (upOrent>noneOrent && downOrent>noneOrent)){
 				jointSpaceVector[index]=none;
 			}
-			if((nonevect>upvect && downvect>upvect )  || ( noneOrent>upOrent && downOrent>upOrent && withOrent)){
+			if((nonevect>upvect && downvect>upvect ) ){
 				jointSpaceVector[index]=up;
 				offset+=increment;
-				return false;
 			}
-			if((upvect>downvect && nonevect>downvect)  || (upOrent>downOrent && noneOrent>downOrent && withOrent )){
+			if((upvect>downvect && nonevect>downvect)  ){
 				jointSpaceVector[index]=down;
 				offset-=increment;
-				return false;
 			}
-			return true;
+			if(( noneOrent>upOrent && downOrent>upOrent)){
+				jointSpaceVector[index]=up;
+				offset+=incrementOrent;
+			}
+			if((upOrent>downOrent && noneOrent>downOrent )){
+				jointSpaceVector[index]=down;
+				offset-=incrementOrent;
+			}
 			
+			jointSpaceVector[index] = myStart+offset;
+			if(start == offset)
+				return true;
+			return false;
+		}
+		public void jitter(){
+			double jitterAmmount = 10;
+			double jitter=(Math.random()*jitterAmmount)-(jitterAmmount /2) ;
+			System.out.println("Jittering Link #"+index+" jitter:"+jitter);
+			offset += jitter;
+			jointSpaceVector[index] = myStart+offset;
 		}
 		double bound(double in){
 			if(in>upper){
+				offset = 0;// Attempt to reset a link on error case
 				return upper;
 			}
 			if(in<lower){
+				offset = 0;// Attempt to reset a link on error case
 				return lower;
 			}
 			return in;
 		}
 	}
-	
 	public static void main(String [] args){
 
 		DHChain tk = new DHChain(new double[]{90,90,90,90,90,90}, new double[]{-90,-90,-90,-90,-90,-90}, true);
@@ -225,7 +257,8 @@ public  class DHChain {
 				System.out.print(" "+(back[i]-targetVect[i]));
 			}
 			System.out.print("} \n");
-			System.out.println("Attempted\n"+target+"\nArrived at \n"+tk.forwardKinematics(back));
+			//System.out.println("Attempted\n"+target+"\nArrived at \n"+tk.forwardKinematics(back));
+			ThreadUtil.wait(5000);
 			
 			back = tk.inverseKinematics( home,back);
 			System.out.print("\nJoint angles targeted: {");
@@ -238,7 +271,7 @@ public  class DHChain {
 				System.out.print(" "+(back[i]-targetVect[i]));
 			}
 			System.out.print("} \n");
-			System.out.println("Attempted\n"+target+"\nArrived at \n"+tk.forwardKinematics(back));
+			//System.out.println("Attempted\n"+target+"\nArrived at \n"+tk.forwardKinematics(back));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
