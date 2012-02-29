@@ -24,7 +24,7 @@ public class GradiantDecentNode{
 	double intOrent[] = new double[integralSize]; 
 	
 	double Kp = 1;
-	double Ki = 0;
+	double Ki = 1;
 	
 	public GradiantDecentNode(DHChain chain,int index,double[] jointSpaceVector,Transform cartesianSpace, double u, double l){
 		this.chain = chain;
@@ -66,6 +66,7 @@ public class GradiantDecentNode{
 			integralIndex=0;
 		}
 		
+		//The 2 increment numbers
 		incVect = incVectP*Kp + (integralTotalVect/integralSize)*Ki;
 		incOrent = incOrentP*Kp + (integralTotalOrent/integralSize)*Ki;
 		
