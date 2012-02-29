@@ -12,6 +12,20 @@ public class GradiantDecentNode{
 	double upper;
 	double lower;
 	private final DHChain chain;
+	double incVect;
+	double incOrent;
+	
+	//integral
+	int integralSize = 100;
+	int integralIndex = 0;
+	double integralTotalVect = 0;
+	double integralTotalOrent = 0;
+	double intVect[] = new double[integralSize]; 
+	double intOrent[] = new double[integralSize]; 
+	
+	double Kp = 1;
+	double Ki = 4;
+	
 	public GradiantDecentNode(DHChain chain,int index,double[] jointSpaceVector,Transform cartesianSpace, double u, double l){
 		this.chain = chain;
 		this.offset=0;
@@ -21,6 +35,10 @@ public class GradiantDecentNode{
 		myStart =  jointSpaceVector[index];
 		upper = u;
 		lower = l;
+		for(int i=0;i<integralSize;i++){
+			intVect[i]=0;
+			intOrent[i]=0;
+		}
 	}
 	public boolean step() {
 		double none =  myStart+offset;
@@ -31,8 +49,25 @@ public class GradiantDecentNode{
 		double nonevect = tmp.getOffsetVectorMagnitude(target);
 		double noneOrent = tmp.getOffsetOrentationMagnitude(target);
 		
-		double incVect = (nonevect/500);// Divide by magic number
-		double incOrent = (noneOrent*10);//Multiply by magic number
+		double incVectP = (nonevect/400);// Divide by magic number
+		double incOrentP = (noneOrent*3);//Multiply by magic number
+		//Remove old values off rolling buffer
+		integralTotalVect-=intVect[integralIndex];
+		integralTotalOrent-=intOrent[integralIndex];
+		//Store current values
+		intVect[integralIndex] =incVectP; 
+		intOrent[integralIndex] =incOrentP;
+		//Add current values to totals
+		integralTotalVect+=intVect[integralIndex];
+		integralTotalOrent+=intOrent[integralIndex];
+		//Reset the index for next iteration
+		integralIndex++;
+		if(integralIndex==integralSize){
+			integralIndex=0;
+		}
+		
+		incVect = incVectP*Kp + (integralTotalVect/integralSize)*Ki;
+		incOrent = incOrentP*Kp + (integralTotalOrent/integralSize)*Ki;
 		
 		double up = myStart+offset+incVect;
 		double down =myStart+offset-incVect;
@@ -83,7 +118,7 @@ public class GradiantDecentNode{
 	public void jitter(){
 		double jitterAmmount = 10;
 		double jitter=(Math.random()*jitterAmmount)-(jitterAmmount /2) ;
-		System.out.println("Jittering Link #"+index+" jitter:"+jitter);
+		System.out.println("Jittering Link #"+index+" jitter:"+jitter+" current offset:"+offset);
 		offset += jitter;
 		jointSpaceVector[index] = myStart+offset;
 	}

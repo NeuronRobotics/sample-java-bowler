@@ -123,12 +123,12 @@ public  class DHChain {
 			back = tk.inverseKinematics( home,back);
 			System.out.print("\nJoint angles targeted: {");
 			for(int i=0;i<6;i++){
-				System.out.print(" "+targetVect[i]);
+				System.out.print(" "+0);
 			}
 			System.out.print("} \n");
 			System.out.print("\nJoint angles difference: {");
 			for(int i=0;i<6;i++){
-				System.out.print(" "+(back[i]-targetVect[i]));
+				System.out.print(" "+(back[i]));
 			}
 			System.out.print("} \n");
 			//System.out.println("Attempted\n"+target+"\nArrived at \n"+tk.forwardKinematics(back));

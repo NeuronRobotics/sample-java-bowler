@@ -38,7 +38,7 @@ public class GradiantDecent {
 			}
 			vect = dhChain.forwardKinematics(jointSpaceVector).getOffsetVectorMagnitude(target);
 			orent = dhChain.forwardKinematics(jointSpaceVector).getOffsetOrentationMagnitude(target);
-			notArrived = (vect > 10.0|| orent > .001);
+			notArrived = (vect > .1|| orent > .001);
 			if(stopped == true && notArrived == true){
 				stopped = false;
 				for(int i=0;i<increments.length;i++){
@@ -47,17 +47,11 @@ public class GradiantDecent {
 				//ThreadUtil.wait(100);
 			}
 			if(debug){
-//				System.out.print("\nJoint angles current: {");
-//				for(int i=0;i<jointSpaceVector.length;i++){
-//					System.out.print(" "+jointSpaceVector[i]+ " St="+stop[i]);
-//				}
-//				System.out.print("} \n");
 				dhChain.getViewer().updatePoseDisplay(dhChain.getChain(jointSpaceVector));
-				//ThreadUtil.wait(10);
 			}
-		}while(++iter<1000 && notArrived && stopped == false);//preincrement and check
+		}while(++iter<2000 && notArrived && stopped == false);//preincrement and check
 		if(debug){
-			System.out.println("Numer of iterations #"+iter+" \n\tStopped = "+stopped+" \n\tArrived = "+!notArrived+" \n\tFinal offset= "+vect+" \n\tFinal orent= "+orent);
+			System.out.println("Numer of iterations #"+iter+" \n\tStalled = "+stopped+" \n\tArrived = "+!notArrived+" \n\tFinal offset= "+vect+" \n\tFinal orent= "+orent);
 		}
 		
 		for(int i=0;i<inv.length;i++){
