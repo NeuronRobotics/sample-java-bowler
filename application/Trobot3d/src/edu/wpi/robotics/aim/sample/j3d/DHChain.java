@@ -55,7 +55,7 @@ public  class DHChain {
 		long start = System.currentTimeMillis();
 		GradiantDecent gd = new GradiantDecent(this,debug);
 		
-		double [] inv = gd.inverseKinematics(target, jointSpaceVector,upperLimits,lowerLimits);	
+		double [] inv = gd.inverseKinematics(target, jointSpaceVector);	
 		
 		System.out.println("Inverse Kinematics took "+(System.currentTimeMillis()-start)+"ms");
 		return inv;
@@ -144,6 +144,16 @@ public  class DHChain {
 
 	public DHViewer getViewer() {
 		return viewer;
+	}
+
+	public double[] getUpperLimits() {
+		// TODO Auto-generated method stub
+		return upperLimits;
+	}
+
+	public double[] getlowerLimits() {
+		// TODO Auto-generated method stub
+		return lowerLimits;
 	}
 
 }

@@ -40,25 +40,20 @@ public class GradiantDecentNode{
 			intOrent[i]=0;
 		}
 	}
-	public boolean step() {
+	public boolean stepOrent(){
 		double none =  myStart+offset;
 		double start = offset;
 		jointSpaceVector[index]= bound (none);
 		Transform tmp =chain.forwardKinematics(jointSpaceVector);
 		tmp =chain.forwardKinematics(jointSpaceVector);
-		double nonevect = tmp.getOffsetVectorMagnitude(target);
 		double noneOrent = tmp.getOffsetOrentationMagnitude(target);
 		
-		double incVectP = (nonevect/1000);// Divide by magic number
 		double incOrentP = (noneOrent*10);//Multiply by magic number
 		//Remove old values off rolling buffer
-		integralTotalVect-=intVect[integralIndex];
 		integralTotalOrent-=intOrent[integralIndex];
 		//Store current values
-		intVect[integralIndex] =incVectP; 
 		intOrent[integralIndex] =incOrentP;
 		//Add current values to totals
-		integralTotalVect+=intVect[integralIndex];
 		integralTotalOrent+=intOrent[integralIndex];
 		//Reset the index for next iteration
 		integralIndex++;
@@ -67,31 +62,76 @@ public class GradiantDecentNode{
 		}
 		
 		//The 2 increment numbers
-		incVect = incVectP*Kp + (integralTotalVect/integralSize)*Ki;
 		incOrent = incOrentP*Kp + (integralTotalOrent/integralSize)*Ki;
-		
-		double up = myStart+offset+incVect;
-		double down =myStart+offset-incVect;
 		
 		double upO = myStart+offset+incOrent;
 		double downO =myStart+offset-incOrent;
 		
-		jointSpaceVector[index]= bound (up);
-		tmp =chain.forwardKinematics(jointSpaceVector);
-		double upvect = tmp.getOffsetVectorMagnitude(target);
 		jointSpaceVector[index]= bound (upO);
 		tmp =chain.forwardKinematics(jointSpaceVector);
 		double upOrent = tmp.getOffsetOrentationMagnitude(target);
 		
-		jointSpaceVector[index]= bound (down);
-		tmp =chain.forwardKinematics(jointSpaceVector);
-		double downvect = tmp.getOffsetVectorMagnitude(target);
 		jointSpaceVector[index]= bound (downO);
 		tmp =chain.forwardKinematics(jointSpaceVector);
 		double downOrent = tmp.getOffsetOrentationMagnitude(target);
 		
 
-		if((upvect>nonevect && downvect>nonevect)  && (upOrent>noneOrent && downOrent>noneOrent)){
+		if( (upOrent>noneOrent && downOrent>noneOrent)){
+			jointSpaceVector[index]=none;
+		}
+
+		if(( noneOrent>upOrent && downOrent>upOrent)){
+			jointSpaceVector[index]=upO;
+			offset+=incOrent;
+		}
+		if((upOrent>downOrent && noneOrent>downOrent )){
+			jointSpaceVector[index]=downO;
+			offset-=incOrent;
+		}
+		
+		jointSpaceVector[index] = myStart+offset;
+		if(start == offset)
+			return true;
+		return false;
+	}
+	public boolean stepLin(){
+		double none =  myStart+offset;
+		double start = offset;
+		jointSpaceVector[index]= bound (none);
+		Transform tmp =chain.forwardKinematics(jointSpaceVector);
+		tmp =chain.forwardKinematics(jointSpaceVector);
+		double nonevect = tmp.getOffsetVectorMagnitude(target);
+		
+		double incVectP = (nonevect/1000);// Divide by magic number
+		//Remove old values off rolling buffer
+		integralTotalVect-=intVect[integralIndex];
+		//Store current values
+		intVect[integralIndex] =incVectP; 
+		//Add current values to totals
+		integralTotalVect+=intVect[integralIndex];
+		//Reset the index for next iteration
+		integralIndex++;
+		if(integralIndex==integralSize){
+			integralIndex=0;
+		}
+		
+		//The 2 increment numbers
+		incVect = incVectP*Kp + (integralTotalVect/integralSize)*Ki;
+		
+		double up = myStart+offset+incVect;
+		double down =myStart+offset-incVect;
+		
+		jointSpaceVector[index]= bound (up);
+		tmp =chain.forwardKinematics(jointSpaceVector);
+		double upvect = tmp.getOffsetVectorMagnitude(target);
+
+		
+		jointSpaceVector[index]= bound (down);
+		tmp =chain.forwardKinematics(jointSpaceVector);
+		double downvect = tmp.getOffsetVectorMagnitude(target);
+		
+
+		if((upvect>nonevect && downvect>nonevect) ){
 			jointSpaceVector[index]=none;
 		}
 		if((nonevect>upvect && downvect>upvect ) ){
@@ -102,19 +142,15 @@ public class GradiantDecentNode{
 			jointSpaceVector[index]=down;
 			offset-=incVect;
 		}
-		if(( noneOrent>upOrent && downOrent>upOrent)){
-			jointSpaceVector[index]=up;
-			offset+=incOrent;
-		}
-		if((upOrent>downOrent && noneOrent>downOrent )){
-			jointSpaceVector[index]=down;
-			offset-=incOrent;
-		}
 		
 		jointSpaceVector[index] = myStart+offset;
 		if(start == offset)
 			return true;
 		return false;
+	}
+	
+	public boolean step() {
+		return stepLin()||stepOrent();
 	}
 	public void jitter(){
 		double jitterAmmount = 10;
