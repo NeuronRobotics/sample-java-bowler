@@ -53,9 +53,12 @@ public  class DHChain {
 		if(links == null)
 			return null;
 		long start = System.currentTimeMillis();
-		GradiantDecent gd = new GradiantDecent(this,debug);
+		DhInverseSolver is;
 		
-		double [] inv = gd.inverseKinematics(target, jointSpaceVector);	
+		is = new GradiantDecent(this,debug);
+		//is = new ComputedChainModel(this,debug);
+		
+		double [] inv = is.inverseKinematics(target, jointSpaceVector);	
 		
 		System.out.println("Inverse Kinematics took "+(System.currentTimeMillis()-start)+"ms");
 		return inv;

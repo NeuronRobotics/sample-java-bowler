@@ -2,7 +2,7 @@ package edu.wpi.robotics.aim.sample.j3d;
 
 import edu.wpi.robotics.aim.core.math.Transform;
 
-public class GradiantDecent {
+public class GradiantDecent implements DhInverseSolver{
 
 	private final DHChain dhChain;
 	private final boolean debug;
@@ -67,7 +67,6 @@ public class GradiantDecent {
 		do{
 			stopped = true;
 			for(int i=increments.length-1;i>=0;i--){
-			//for(int i=0;i<increments.length;i++){
 				stop[i]=increments[i].step();
 				if(!stop[i]){
 					stopped = false;
@@ -101,5 +100,5 @@ public class GradiantDecent {
 		}
 		return inv;
 	}
-
+	
 }
