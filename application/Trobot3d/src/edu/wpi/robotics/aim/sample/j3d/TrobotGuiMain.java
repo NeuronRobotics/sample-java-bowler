@@ -42,6 +42,7 @@ public class TrobotGuiMain {
 					if(!mcon.connect()){
 						throw new RuntimeException("Not a bowler Device on connection: "+connection);
 					}
+					mcon.killAllPidGroups();
 					model = new TrobotKinematics(mcon);
 					gui.setKinematicsModel(model);
 					try{

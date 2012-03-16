@@ -37,42 +37,45 @@ public  class DHChain {
 		
 		this.upperLimits = upperLimits;
 		this.lowerLimits = lowerLimits;
-		links.add(new DHLink(	13, 	Math.toRadians(180), 	32, 	Math.toRadians(-90)));//0->1
-		links.add(new DHLink(	25, 	Math.toRadians(-90), 	93, 	Math.toRadians(180)));//1->2
-		links.add(new DHLink(	11, 	Math.toRadians(90), 	24, 	Math.toRadians(90)));//2->3 
-		links.add(new DHLink(	128, 	Math.toRadians(-90), 	0, 		Math.toRadians(90)));//3->4
+		getLinks().add(new DHLink(	13, 	Math.toRadians(180), 	32, 	Math.toRadians(-90)));//0->1
+		getLinks().add(new DHLink(	25, 	Math.toRadians(-90), 	93, 	Math.toRadians(180)));//1->2
+		getLinks().add(new DHLink(	11, 	Math.toRadians(90), 	24, 	Math.toRadians(90)));//2->3 
+		getLinks().add(new DHLink(	128, 	Math.toRadians(-90), 		0, 		Math.toRadians(90)));//3->4
 		
-		links.add(new DHLink(	0, 		Math.toRadians(0), 		0, 		Math.toRadians(-90)));//4->5
-		links.add(new DHLink(	45, 	Math.toRadians(90), 		0, 		Math.toRadians(0)));//5->tool
+		getLinks().add(new DHLink(	0, 		Math.toRadians(0), 			0, 		Math.toRadians(-90)));//4->5
+		getLinks().add(new DHLink(	84, 	Math.toRadians(90), 		0, 		Math.toRadians(0)));//5->tool
 		
 		forwardKinematics(new  double [] {0,0,0,0,0,0});
 	}
 
 	public double[] inverseKinematics(Transform target,double[] jointSpaceVector )throws Exception {
 		
-		if(links == null)
+		if(getLinks() == null)
 			return null;
 		long start = System.currentTimeMillis();
 		DhInverseSolver is;
 		
 		is = new GradiantDecent(this,debug);
-		//is = new ComputedChainModel(this,debug);
+		//is = new ComputedGeometricModel(this,debug);
 		
 		double [] inv = is.inverseKinematics(target, jointSpaceVector);	
+		if(debug){
+			getViewer().updatePoseDisplay(getChain(jointSpaceVector));
+		}
 		
 		System.out.println("Inverse Kinematics took "+(System.currentTimeMillis()-start)+"ms");
 		return inv;
 	}
 
 	public Transform forwardKinematics(double[] jointSpaceVector) {
-		if(links == null)
+		if(getLinks() == null)
 			return new Transform();
-		if (jointSpaceVector.length!=links.size())
+		if (jointSpaceVector.length!=getLinks().size())
 			throw new IndexOutOfBoundsException("DH links do not match defined links");
 		Transform current = new Transform();
 		setChain(new ArrayList<Transform>());
-		for(int i=0;i<links.size();i++) {
-			Transform step = links.get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
+		for(int i=0;i<getLinks().size();i++) {
+			Transform step = getLinks().get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
 			//System.out.println("Current:\n"+current+"Step:\n"+step);
 			current = current.times(step);
 			chain.add(current);
@@ -157,6 +160,14 @@ public  class DHChain {
 	public double[] getlowerLimits() {
 		// TODO Auto-generated method stub
 		return lowerLimits;
+	}
+
+	public void setLinks(ArrayList<DHLink> links) {
+		this.links = links;
+	}
+
+	public ArrayList<DHLink> getLinks() {
+		return links;
 	}
 
 }

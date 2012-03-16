@@ -21,7 +21,7 @@ public class GradiantDecent implements DhInverseSolver{
 		for(int i=0;i<linkNum;i++){
 			increments[i] = new GradiantDecentNode(dhChain,i,jointSpaceVector, target, dhChain.getUpperLimits()[i],dhChain.getlowerLimits()[i] );
 		}
-		double posOffset = 1;
+		double posOffset = 10;
 		int iter=0;
 		double vect=0;
 		double orent = 0;
@@ -30,40 +30,6 @@ public class GradiantDecent implements DhInverseSolver{
 		boolean [] stop = new boolean [increments.length];
 		double previousV =dhChain.forwardKinematics(jointSpaceVector).getOffsetVectorMagnitude(target);
 		double previousO =dhChain.forwardKinematics(jointSpaceVector).getOffsetOrentationMagnitude(target);
-		do{
-			stopped = true;
-			for(int i=increments.length-1;i>=0;i--){
-			//for(int i=0;i<increments.length;i++){
-				stop[i]=increments[i].stepLin();
-				if(!stop[i]){
-					stopped = false;
-				}
-			}
-			vect = dhChain.forwardKinematics(jointSpaceVector).getOffsetVectorMagnitude(target);
-			if(previousV>=vect){
-				for(int i=0;i<inv.length;i++){
-					inv[i]=jointSpaceVector[i];
-				}
-				previousV=vect;
-			}
-			
-			notArrived = (previousV > posOffset);
-			if(stopped == true && notArrived == true){
-				stopped = false;
-				for(int i=0;i<increments.length;i++){
-					increments[i].jitter();
-				}
-			}
-			
-			if(debug){
-				dhChain.getViewer().updatePoseDisplay(dhChain.getChain(jointSpaceVector));
-			}
-		}while(++iter<2000 && notArrived && stopped == false);//preincrement and check
-		
-		if(debug){
-			System.out.println("Numer of iterations #"+iter+" \n\tStalled = "+stopped+" \n\tArrived = "+!notArrived+" \n\tFinal offset= "+vect+" \n\tFinal orent= "+orent);
-		}
-		System.out.println("Position arrived");
 		do{
 			stopped = true;
 			for(int i=increments.length-1;i>=0;i--){
@@ -94,7 +60,7 @@ public class GradiantDecent implements DhInverseSolver{
 			if(debug){
 				dhChain.getViewer().updatePoseDisplay(dhChain.getChain(jointSpaceVector));
 			}
-		}while(++iter<2000 && notArrived && stopped == false);//preincrement and check
+		}while(++iter<200 && notArrived && stopped == false);//preincrement and check
 		if(debug){
 			System.out.println("Numer of iterations #"+iter+" \n\tStalled = "+stopped+" \n\tArrived = "+!notArrived+" \n\tFinal offset= "+vect+" \n\tFinal orent= "+orent);
 		}

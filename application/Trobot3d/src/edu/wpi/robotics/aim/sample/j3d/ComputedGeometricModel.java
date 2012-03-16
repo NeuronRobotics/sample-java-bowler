@@ -13,10 +13,21 @@ public class ComputedGeometricModel  implements DhInverseSolver{
 	public double[] inverseKinematics(Transform target,double[] jointSpaceVector ) {
 		int linkNum = jointSpaceVector.length;
 		double [] inv = new double[linkNum];
-		
-		
-		
+		if(!checkSphericalWrist() || dhChain.getLinks().size() != 6) {
+			throw new RuntimeException("This is not a 6DOF arm with a spherical wrist, this solver will not work");
+		}
+		double [] assumption = new double [linkNum];
+		for(int i=0;i<linkNum;i++) {
+			assumption[i]=1;
+		}
 		
 		return inv;
+	}
+
+	private boolean checkSphericalWrist() {
+		int end = dhChain.getLinks().size()-1;
+		return 	dhChain.getLinks().get(end).getR()	==0 && 
+				dhChain.getLinks().get(end-1).getR()==0 && 
+				dhChain.getLinks().get(end-2).getR()==0  ;
 	}
 }
