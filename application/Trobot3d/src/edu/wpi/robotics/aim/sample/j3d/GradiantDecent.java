@@ -1,6 +1,7 @@
 package edu.wpi.robotics.aim.sample.j3d;
 
-import edu.wpi.robotics.aim.core.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+
 
 public class GradiantDecent implements DhInverseSolver{
 

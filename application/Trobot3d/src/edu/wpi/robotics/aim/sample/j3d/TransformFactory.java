@@ -21,10 +21,10 @@ import javax.vecmath.Vector3f;
 
 import Jama.Matrix;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.Rotation;
+import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
 import com.sun.j3d.utils.geometry.ColorCube;
 
-import edu.wpi.robotics.aim.core.math.Rotation;
-import edu.wpi.robotics.aim.core.math.Transform;
 
 public class TransformFactory {
 	

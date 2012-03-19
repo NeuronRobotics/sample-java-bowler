@@ -12,13 +12,13 @@ import javax.swing.JPanel;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
 import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
 import com.sun.j3d.utils.behaviors.mouse.MouseWheelZoom;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
-import edu.wpi.robotics.aim.core.math.Transform;
 
 public class DHViewer extends Canvas3D {
 	SimpleUniverse simpleU ;

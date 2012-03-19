@@ -4,13 +4,10 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 import Jama.Matrix;
-
-import edu.wpi.robotics.aim.core.math.Rotation;
-import edu.wpi.robotics.aim.core.math.Transform;
-
 public  class DHChain {
 	private ArrayList<DHLink> links = new ArrayList<DHLink>();
 	private ArrayList<Transform> chain = new ArrayList<Transform>();

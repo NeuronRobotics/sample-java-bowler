@@ -1,6 +1,6 @@
 package edu.wpi.robotics.aim.sample.j3d;
 
-import edu.wpi.robotics.aim.core.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
 
 public interface DhInverseSolver {
 	double[] inverseKinematics(Transform target,double[] jointSpaceVector );

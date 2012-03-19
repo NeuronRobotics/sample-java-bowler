@@ -1,13 +1,11 @@
 package edu.wpi.robotics.aim.sample.j3d;
 
-import javax.xml.parsers.FactoryConfigurationError;
-
+import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
+import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.dyio.DyIO;
 
-import edu.wpi.robotics.aim.core.math.Transform;
-import edu.wpi.robotics.aim.core.robot.AbstractKinematics;
 
 public class TrobotKinematics extends AbstractKinematics {
 	

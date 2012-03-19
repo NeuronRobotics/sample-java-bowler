@@ -14,6 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.vecmath.Point3d;
 
+import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListener;
+import com.neuronrobotics.sdk.addons.kinematics.JointLimit;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
@@ -40,10 +43,6 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
-import edu.wpi.robotics.aim.core.math.Transform;
-import edu.wpi.robotics.aim.core.robot.AbstractKinematics;
-import edu.wpi.robotics.aim.core.robot.IJointSpaceUpdateListener;
-import edu.wpi.robotics.aim.core.robot.JointLimit;
 
 public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListener{
 

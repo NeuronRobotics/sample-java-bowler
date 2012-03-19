@@ -1,7 +1,8 @@
 package edu.wpi.robotics.aim.sample.j3d;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+
 import Jama.Matrix;
-import edu.wpi.robotics.aim.core.math.Transform;
 
 public class DHLink {
 	

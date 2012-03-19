@@ -11,10 +11,10 @@ import javax.swing.JTabbedPane;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGui;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
-import edu.wpi.robotics.aim.sample.gui.SampleGui;
 
 public class TrobotGuiMain {
 	double [] startVect = new double [] { 0,0,0,0,0,0};
