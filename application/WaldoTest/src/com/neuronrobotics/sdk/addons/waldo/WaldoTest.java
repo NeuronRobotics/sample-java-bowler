@@ -63,7 +63,7 @@ public class WaldoTest implements IAnalogInputListener {
 		for (int i=0;i<6;i++){
 			if(inputs[i] == chan){
 				values[i]= (int) (value*.25);
-				if(i==2 || i==0)
+				if(i==2 || i==0 || i == 3)
 					values[i]=255-values[i];
 			}
 		}
