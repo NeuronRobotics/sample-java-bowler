@@ -64,6 +64,7 @@ public class Head {
 			//System.out.println("Current servo angel: "+Math.toDegrees(zRot)+" angle Local: "+Math.toDegrees(panLocal) +" setting to: "+ Math.toDegrees(panUpdate) );
 			setAngles(panUpdate, tiltUpdate);
 			if (faceLocation[2]< 15){
+				System.out.println("Face too close!");
 				if(chomper == null){
 					chomper = new chomp();
 					chomper.start();
