@@ -1,4 +1,4 @@
-package test;
+package com.neuronrobotics.demo.face;
 
 import static com.googlecode.javacv.cpp.opencv_core.cvGetSeqElem;
 

@@ -3,8 +3,6 @@ package com.neuronrobotics.demo.face;
 import java.util.ArrayList;
 import java.util.zip.ZipException;
 
-import test.FaceLocations;
-
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;

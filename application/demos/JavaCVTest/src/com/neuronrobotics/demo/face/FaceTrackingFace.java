@@ -1,7 +1,5 @@
 package com.neuronrobotics.demo.face;
 
-import test.FaceDectector;
-
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.video.OSUtil;
