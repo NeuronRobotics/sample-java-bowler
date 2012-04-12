@@ -8,6 +8,7 @@ import com.neuronrobotics.video.OSUtil;
 
 public class FaceTrackingFace {
 	public FaceTrackingFace() throws Exception{
+		DyIO.disableFWCheck();
 		DyIO dyio = new DyIO();
 		if(!ConnectionDialog.getBowlerDevice(dyio))
 			return;

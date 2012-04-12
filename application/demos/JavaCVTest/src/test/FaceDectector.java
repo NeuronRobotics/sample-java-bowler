@@ -59,11 +59,15 @@ public class FaceDectector extends JFrame {
 		setName("Face Detector");
 		add(panel);
 		setVisible(true);
-		File classifierFileFront = new File("haarcascade_frontalface_alt.xml");
+//		File classifierFileFront = new File("haarcascade_frontalface_alt.xml");
+//		File classifierFileSide = new File("haarcascade_profileface.xml");
+		
+		File classifierFileFront = HaarCascadeCache.getFile("haarcascade_frontalface_alt.xml");
+		File classifierFileSide = HaarCascadeCache.getFile("haarcascade_profileface.xml");
+		
         if (classifierFileFront == null || classifierFileFront.length() <= 0) {
             throw new IOException("Could not extract the classifier file.");
         }
-        File classifierFileSide = new File("haarcascade_profileface.xml");
         if (classifierFileSide == null || classifierFileSide.length() <= 0) {
             throw new IOException("Could not extract the classifier file.");
         }
