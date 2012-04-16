@@ -17,6 +17,7 @@ import javax.vecmath.Point3d;
 import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListener;
 import com.neuronrobotics.sdk.addons.kinematics.JointLimit;
+import com.neuronrobotics.sdk.addons.kinematics.TrobotKinematics;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;

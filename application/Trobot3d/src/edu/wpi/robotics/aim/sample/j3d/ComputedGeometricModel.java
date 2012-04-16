@@ -1,5 +1,7 @@
 package edu.wpi.robotics.aim.sample.j3d;
 
+import com.neuronrobotics.sdk.addons.kinematics.DHChain;
+import com.neuronrobotics.sdk.addons.kinematics.DhInverseSolver;
 import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
 
 public class ComputedGeometricModel  implements DhInverseSolver{
