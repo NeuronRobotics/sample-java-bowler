@@ -2,7 +2,7 @@ package edu.wpi.robotics.aim.sample.j3d;
 
 import com.neuronrobotics.sdk.addons.kinematics.DHChain;
 import com.neuronrobotics.sdk.addons.kinematics.DhInverseSolver;
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 public class ComputedGeometricModel  implements DhInverseSolver{
 	private final DHChain dhChain;
@@ -12,7 +12,7 @@ public class ComputedGeometricModel  implements DhInverseSolver{
 		this.debug = debug;
 	}
 	
-	public double[] inverseKinematics(Transform target,double[] jointSpaceVector ) {
+	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector ) {
 		int linkNum = jointSpaceVector.length;
 		double [] inv = new double[linkNum];
 		if(!checkSphericalWrist() || dhChain.getLinks().size() != 6) {

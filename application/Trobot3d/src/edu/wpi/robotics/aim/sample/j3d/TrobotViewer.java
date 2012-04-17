@@ -14,8 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.vecmath.Point3d;
 
-import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematics;
-import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListener;
+import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
+import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.JointLimit;
 import com.neuronrobotics.sdk.addons.kinematics.TrobotKinematics;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 
-public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListener{
+public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListenerNR{
 
 	/**
 	 * 
@@ -80,17 +80,17 @@ public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListener{
 
 
 	@Override
-	public void onJointSpaceUpdate(AbstractKinematics source, double[] joints) {
+	public void onJointSpaceUpdate(AbstractKinematicsNR source, double[] joints) {
 		dh.updatePoseDisplay(robot.getDhChain().getChain(joints));
 	}
 
 	@Override
-	public void onJointSpaceTargetUpdate(AbstractKinematics source,double[] joints) {
+	public void onJointSpaceTargetUpdate(AbstractKinematicsNR source,double[] joints) {
 		dh.updatePoseDisplay(robot.getDhChain().getChain(joints));
 	}
 
 	@Override
-	public void onJointSpaceLimit(AbstractKinematics source, int axis,JointLimit event) {
+	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis,JointLimit event) {
 		
 	}
 

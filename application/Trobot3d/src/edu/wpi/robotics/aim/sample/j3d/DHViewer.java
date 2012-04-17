@@ -13,7 +13,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import com.neuronrobotics.sdk.addons.kinematics.DHChain;
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
@@ -54,14 +54,14 @@ public class DHViewer extends Canvas3D {
     	// Create the root of the branch graph
     	BranchGroup rootBranchGroup = new BranchGroup();
     	
-    	base = TransformFactory.getLabledAxis(new Transform(), "Base");
+    	base = TransformFactory.getLabledAxis(new TransformNR(), "Base");
     	//links.add(base);
     	base.setTransform(getBaseLocation());
     	rootBranchGroup.addChild(base); 
     	
     	int i=0;
-    	ArrayList<Transform> chain = tk.getChain(jointSpaceVector);
-    	for(Transform t:chain){
+    	ArrayList<TransformNR> chain = tk.getChain(jointSpaceVector);
+    	for(TransformNR t:chain){
     		TransformGroup tmp = TransformFactory.getLabledAxis(t, "Link #"+i++);
     		links.add(tmp);
     		base.addChild(tmp);
@@ -111,7 +111,7 @@ public class DHViewer extends Canvas3D {
         base.setTransform(getBaseLocation());
 	}
 	
-	public void updatePoseDisplay(ArrayList<Transform> current) {
+	public void updatePoseDisplay(ArrayList<TransformNR> current) {
 		//System.out.println("Updating Display");
 		//ArrayList<Transform> current = robot.getDhChain().getChain(robot.getCurrentJointSpaceVector());
 		for(int i=0;i<links.size();i++){

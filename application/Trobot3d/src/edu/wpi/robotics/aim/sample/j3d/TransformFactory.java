@@ -21,18 +21,18 @@ import javax.vecmath.Vector3f;
 
 import Jama.Matrix;
 
-import com.neuronrobotics.sdk.addons.kinematics.math.Rotation;
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.sun.j3d.utils.geometry.ColorCube;
 
 
 public class TransformFactory {
 	
 	public static Transform3D getTransform(double x, double y, double z){
-		return getTransform(new Transform(x, y, z, new Rotation()));
+		return getTransform(new TransformNR(x, y, z, new RotationNR()));
 	}
 	
-	public static Transform3D getTransform(Transform input){
+	public static Transform3D getTransform(TransformNR input){
 		double [][] data = input.getMatrixTransform().getArray();
 		int div = 20;
 		data[0][3]/=div;
@@ -51,7 +51,7 @@ public class TransformFactory {
 		Transform3D t = new Transform3D(output);
 		return t;
 	}
-	public static TransformGroup getLabledAxis(Transform input, String text){
+	public static TransformGroup getLabledAxis(TransformNR input, String text){
 		//System.out.println("Creating transform "+text+" with\n"+input);
 		Transform3D trans = getTransform(input);
 		TransformGroup back = new TransformGroup(trans);

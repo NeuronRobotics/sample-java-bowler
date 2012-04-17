@@ -12,7 +12,7 @@ import javax.swing.JTabbedPane;
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.sdk.addons.kinematics.TrobotKinematics;
-import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGui;
+import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
@@ -24,7 +24,7 @@ public class TrobotGuiMain {
 	private TrobotGuiMain(){
 		
 		try{
-			final SampleGui gui = new SampleGui();
+			final SampleGuiNR gui = new SampleGuiNR();
 			final JFrame frame = new JFrame();
 			final JTabbedPane tabs = new JTabbedPane();
 			JPanel starter = new JPanel(new MigLayout());
