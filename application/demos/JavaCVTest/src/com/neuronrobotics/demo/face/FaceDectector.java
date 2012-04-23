@@ -148,9 +148,9 @@ public class FaceDectector extends JFrame {
 		boolean UseHighSpeedImaging = OSUtil.isLinux();
 		try{
 			FaceDectector f;
-			if(UseHighSpeedImaging)
-				f=new FaceDectector("/dev/video0",320,240);
-			else
+//			if(UseHighSpeedImaging)
+//				f=new FaceDectector("/dev/video0",320,240);
+//			else
 				f=new FaceDectector(0);
 			long avgIndex=1;
 			double avegTotal = 0;
