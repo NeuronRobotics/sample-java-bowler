@@ -21,6 +21,7 @@ import com.neuronrobotics.sdk.addons.kinematics.TrobotKinematics;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
@@ -53,6 +54,8 @@ public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListenerNR
 	private static final long serialVersionUID = 4624867202513493512L;
 	TrobotKinematics robot;
 	DHViewer dh;
+	private double[] joints;
+	
 	
 	public TrobotViewer(TrobotKinematics bot){
 		robot = bot;
@@ -75,23 +78,30 @@ public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListenerNR
         add("North", controls);
         add("Center", dh);
         robot.addJointSpaceListener(this);
-        
+        new updater().start();
 	}
 
 
 	@Override
 	public void onJointSpaceUpdate(AbstractKinematicsNR source, double[] joints) {
-		dh.updatePoseDisplay(robot.getDhChain().getChain(joints));
+		joints=joints;
 	}
 
 	@Override
 	public void onJointSpaceTargetUpdate(AbstractKinematicsNR source,double[] joints) {
-		dh.updatePoseDisplay(robot.getDhChain().getChain(joints));
+		//dh.updatePoseDisplay(robot.getDhChain().getChain(joints));
 	}
 
 	@Override
 	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis,JointLimit event) {
 		
 	}
-
+	private class updater extends Thread{
+		public void run(){
+			while(robot.getFactory().isConnected()){
+				ThreadUtil.wait(200);
+				dh.updatePoseDisplay(robot.getDhChain().getChain(joints));
+			}
+		}
+	}
 }
