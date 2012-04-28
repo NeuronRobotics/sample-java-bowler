@@ -19,6 +19,7 @@ import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.JointLimit;
 import com.neuronrobotics.sdk.addons.kinematics.TrobotKinematics;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -77,6 +78,7 @@ public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListenerNR
         dh = new DHViewer(robot.getDhChain(), robot.getCurrentJointSpaceVector());
         add("North", controls);
         add("Center", dh);
+        joints = robot.getCurrentJointSpaceVector();
         robot.addJointSpaceListener(this);
         new updater().start();
 	}
@@ -84,7 +86,13 @@ public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListenerNR
 
 	@Override
 	public void onJointSpaceUpdate(AbstractKinematicsNR source, double[] joints) {
-		joints=joints;
+		
+		for(int i=0;i<joints.length;i++){
+			this.joints[i]=joints[i];
+			
+		}
+		
+		
 	}
 
 	@Override
@@ -99,8 +107,21 @@ public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListenerNR
 	private class updater extends Thread{
 		public void run(){
 			while(robot.getFactory().isConnected()){
-				ThreadUtil.wait(200);
-				dh.updatePoseDisplay(robot.getDhChain().getChain(joints));
+				ThreadUtil.wait(50);
+				Log.enableSystemPrint(false);
+				double[] tmp = new double[joints.length];
+				//System.out.print("\nDisplay update: [");
+				for(int i=0;i<joints.length;i++){
+					tmp[i]=joints[i];
+					//System.out.print(tmp[i]+" ");
+				}
+				//System.out.print("]");
+				try{
+					dh.updatePoseDisplay(robot.getDhChain().getChain(tmp));
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				//System.out.println("Display Update");
 			}
 		}
 	}
