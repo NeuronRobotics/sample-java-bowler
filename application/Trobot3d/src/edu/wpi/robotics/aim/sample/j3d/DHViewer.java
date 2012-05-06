@@ -104,7 +104,9 @@ public class DHViewer extends Canvas3D {
         TransformGroup viewTransform = simpleU.getViewingPlatform().getViewPlatformTransform();
         
         Transform3D t3d = new Transform3D();        
-        t3d.lookAt(new Point3d(20,20,20), new Point3d(0,5,-3), new Vector3d(0,1,0));
+        t3d.lookAt(new Point3d(20,20,20),//Position of camera
+        		new Point3d(0,0,0), //position of base frame
+        		new Vector3d(0,1,0)); // orentation of camera
         t3d.invert();
         
         viewTransform.setTransform(t3d);
