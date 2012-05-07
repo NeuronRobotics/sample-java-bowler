@@ -48,6 +48,12 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 					mcon.killAllPidGroups();
 					setMaster(new TrobotKinematics(mcon,"TrobotMaster.xml"));
 					gui.setKinematicsModel(getMaster());
+					try {
+						slave.setDesiredJointSpaceVector(new double [] {0,0,0,0,0,0},0);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					try{
 						tabs.add("Master",new TrobotViewer(getMaster()));
 						tabs.add("Slave",new TrobotViewer(slave));
