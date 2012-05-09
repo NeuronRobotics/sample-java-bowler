@@ -59,6 +59,12 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 					}
 					try{
 						masterViewer = new TrobotViewer(getMaster());
+						try {
+							slave.setDesiredTaskSpaceTransform(getMaster().getCurrentTaskSpaceTransform(), 0);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						slaveViewer = new TrobotViewer(slave);
 						tabs.add("Master",masterViewer);
 						tabs.add("Slave",slaveViewer);
