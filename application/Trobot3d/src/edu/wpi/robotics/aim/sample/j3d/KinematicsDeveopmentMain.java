@@ -25,6 +25,8 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 	double [] startVect = new double [] { 0,0,0,0,0,0};
 	private TrobotKinematics master;
 	TrobotKinematics slave = new TrobotKinematics(); 
+	TrobotViewer masterViewer;
+	TrobotViewer slaveViewer;
 	private KinematicsDeveopmentMain(){
 		
 		try{
@@ -56,8 +58,10 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 						e.printStackTrace();
 					}
 					try{
-						tabs.add("Master",new TrobotViewer(getMaster()));
-						tabs.add("Slave",new TrobotViewer(slave));
+						masterViewer = new TrobotViewer(getMaster());
+						slaveViewer = new TrobotViewer(slave);
+						tabs.add("Master",masterViewer);
+						tabs.add("Slave",slaveViewer);
 					}catch(Error ex){
 						JPanel error = new JPanel(new MigLayout());
 						error.add(new JLabel("Error while loading Java3d library:"),"wrap");
@@ -117,6 +121,8 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		try {
 			slave.setDesiredTaskSpaceTransform(pose, 0);
+			//masterViewer.addTransform(pose,"Target");
+			slaveViewer.addTransform(pose,"Target");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
