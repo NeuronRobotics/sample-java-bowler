@@ -8,4 +8,8 @@ public class RosDyIONode {
 		dyio=d;
 		
 	}
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
 }
