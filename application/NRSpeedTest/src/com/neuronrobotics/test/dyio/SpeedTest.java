@@ -30,6 +30,7 @@ public class SpeedTest {
 		if(c==null) {
 			System.exit(1);
 		}
+		System.out.println("Starting on arch: "+System.getProperty("os.arch")+" "+System.getProperty("os.name"));
 		System.out.println("Starting test");
 		DyIO dyio = new DyIO(c);
 		//dyio.setThreadedUpstreamPackets(false);
