@@ -2,6 +2,7 @@
 <project default="deploy" name="Create Runnable Jar for NRSpeedTest">
   <!--this file was created by Eclipse Runnable JAR Export Wizard-->
   <!--ANT 1.7 is required  -->
+	<property file="../NRSDK/src/com/neuronrobotics/sdk/config/build.properties"/>
 	<property name="app.path"      value="/${app.name}"/>
 	<property name="build.home"    value="${basedir}/build"/>
 	<property name="lib.home"      value="${basedir}/libs"/>
