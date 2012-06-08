@@ -17,6 +17,7 @@ public class SpeedTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Log.enableDebugPrint(true);
 		DyIO.disableFWCheck();
 		BowlerAbstractConnection c =null;
 //		BowlerAbstractConnection c =  new SerialConnection("/dev/DyIO0")
@@ -26,8 +27,9 @@ public class SpeedTest {
 		else {
 			c =  new SerialConnection(args[0]);
 		}
-		if(c==null)
+		if(c==null) {
 			System.exit(1);
+		}
 		System.out.println("Starting test");
 		DyIO dyio = new DyIO(c);
 		//dyio.setThreadedUpstreamPackets(false);
