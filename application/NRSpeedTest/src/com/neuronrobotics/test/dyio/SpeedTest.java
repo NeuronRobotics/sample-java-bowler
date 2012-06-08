@@ -17,7 +17,7 @@ public class SpeedTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Log.enableDebugPrint(true);
+		//Log.enableDebugPrint(true);
 		DyIO.disableFWCheck();
 		BowlerAbstractConnection c =null;
 //		BowlerAbstractConnection c =  new SerialConnection("/dev/DyIO0")
