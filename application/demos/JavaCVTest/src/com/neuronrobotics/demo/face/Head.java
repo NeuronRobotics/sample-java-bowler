@@ -55,7 +55,7 @@ public class Head {
 			globalFaceLocation[0] = Math.cos(panLocal + zRot) * hypLocal;
 			globalFaceLocation[2] = Math.sin(panLocal + zRot) * hypLocal;
 			//System.out.println("Global Location, x: "+globalFaceLocation[0]+" z: "+globalFaceLocation[2]);
-			double panUpdate = zRot-(panLocal/5);
+			double panUpdate = zRot-(panLocal/7);
 			//next update the tilt
 			double xRot = getTiltAngle();
 			double tiltLocal = Math.asin(faceLocation[1]/faceLocation[2]);
