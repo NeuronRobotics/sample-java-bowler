@@ -48,6 +48,8 @@ public class FaceDectector extends JFrame {
 		HighSpeedImageing = false;
 		grabber = new OpenCVFrameGrabber(index);
         grabber.start();
+        grabber.setImageWidth(640);
+        grabber.setImageHeight(480);
         init();
 	}
 	public FaceDectector(String device, int hight, int width) throws Exception{
@@ -87,7 +89,7 @@ public class FaceDectector extends JFrame {
 		lab=new JLabel();
 		panel.add(lab);
         updateFaces();
-        pack();
+        setSize(640,480);
 	}
 	
 	public void stop() throws Exception{
@@ -107,15 +109,26 @@ public class FaceDectector extends JFrame {
 		else
 			frame = grabber.grab();
 		
-		setSize(frame.width(), frame.height());
-		BufferedImage smallGrey = toGrayScale(frame.getBufferedImage(), sunSampWidth,sunSampHeight);
+		//setSize(frame.width(), frame.height());
+		sunSampWidth=frame.width();
+		sunSampHeight=frame.height();
+		
+		BufferedImage grab = frame.getBufferedImage();
+		
+		BufferedImage smallGrey = toGrayScale(grab, sunSampWidth,sunSampHeight);
 		grayImage = IplImage.createFrom(smallGrey);
 		
+		
        
-        BufferedImage im = frame.getBufferedImage();
-        BufferedImage display = new BufferedImage(frame.width(), frame.height(),BufferedImage.TYPE_INT_RGB);
+        BufferedImage im = grab;
+        
+        double scale = (double)getHeight()/ (double)im.getHeight();
+        
+        BufferedImage display = new BufferedImage(getWidth(), getHeight(),BufferedImage.TYPE_INT_RGB);
 		Graphics2D g =  display.createGraphics();
-		g.drawImage(im, 0, 0, im.getWidth(), im.getHeight(), null);
+		
+		g.drawImage(im, 0, 0, (int)(im.getWidth()*scale),(int) (im.getHeight()*scale), null);
+		
 		im = grayImage.getBufferedImage();
 		g.drawImage(im, 0, 0, im.getWidth(), im.getHeight(), null);
 		g.setColor(Color.red);

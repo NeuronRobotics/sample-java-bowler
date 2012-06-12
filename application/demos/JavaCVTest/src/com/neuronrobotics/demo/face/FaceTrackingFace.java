@@ -1,6 +1,7 @@
 package com.neuronrobotics.demo.face;
 
 import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.video.OSUtil;
 
@@ -11,6 +12,9 @@ public class FaceTrackingFace {
 		if(!ConnectionDialog.getBowlerDevice(dyio))
 			return;
 		dyio.enableBrownOutDetect(false);
+		ServoChannel eyeTilt = new ServoChannel(dyio.getChannel(18));
+		eyeTilt.SetPosition(132);
+		
 		Head head = new Head(dyio);
 		
 		
