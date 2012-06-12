@@ -48,8 +48,8 @@ public class FaceDectector extends JFrame {
 		HighSpeedImageing = false;
 		grabber = new OpenCVFrameGrabber(index);
         grabber.start();
-        grabber.setImageWidth(640);
-        grabber.setImageHeight(480);
+        grabber.setImageWidth(320);
+        grabber.setImageHeight(240);
         init();
 	}
 	public FaceDectector(String device, int hight, int width) throws Exception{
