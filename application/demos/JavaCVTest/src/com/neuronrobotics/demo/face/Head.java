@@ -15,8 +15,8 @@ public class Head {
 	ServoChannel jaw;
 	chomp chomper;
 	private static final double servoScale = 0.762711864;
-	private static final int tiltZero=87;
-	private static final int panZero=105;
+	private static final int tiltZero=128;
+	private static final int panZero=128;
 	
 	int panPos,tiltPos;
 
@@ -55,11 +55,11 @@ public class Head {
 			globalFaceLocation[0] = Math.cos(panLocal + zRot) * hypLocal;
 			globalFaceLocation[2] = Math.sin(panLocal + zRot) * hypLocal;
 			//System.out.println("Global Location, x: "+globalFaceLocation[0]+" z: "+globalFaceLocation[2]);
-			double panUpdate = (panLocal/4)+zRot;
+			double panUpdate = zRot-(panLocal/5);
 			//next update the tilt
 			double xRot = getTiltAngle();
 			double tiltLocal = Math.asin(faceLocation[1]/faceLocation[2]);
-			double tiltUpdate = (tiltLocal/6)+xRot;
+			double tiltUpdate = xRot-(tiltLocal/7);
 			
 			//System.out.println("Current servo angel: "+Math.toDegrees(zRot)+" angle Local: "+Math.toDegrees(panLocal) +" setting to: "+ Math.toDegrees(panUpdate) );
 			setAngles(panUpdate, tiltUpdate);
@@ -103,10 +103,10 @@ public class Head {
 		
 		if(tiltPos!= tiltUpdate){
 			tiltPos=tiltUpdate;
-			if(tiltPos>255)
-				tiltPos=255;
-			if(tiltPos<0)
-				tiltPos=0;
+			if(tiltPos>136)
+				tiltPos=136;
+			if(tiltPos<110)
+				tiltPos=110;
 			tilt.SetPosition(tiltPos);
 		}
 	}

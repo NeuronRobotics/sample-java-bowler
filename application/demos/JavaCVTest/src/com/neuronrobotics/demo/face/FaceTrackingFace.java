@@ -10,6 +10,7 @@ public class FaceTrackingFace {
 		DyIO dyio = new DyIO();
 		if(!ConnectionDialog.getBowlerDevice(dyio))
 			return;
+		dyio.enableBrownOutDetect(false);
 		Head head = new Head(dyio);
 		
 		
@@ -18,9 +19,9 @@ public class FaceTrackingFace {
 			UseHighSpeedImaging = true;
 		}
 		FaceDectector f;
-		if(UseHighSpeedImaging)
-			f=new FaceDectector("/dev/video0",320,240);
-		else
+//		if(UseHighSpeedImaging)
+//			f=new FaceDectector("/dev/video0",320,240);
+//		else
 			f=new FaceDectector(0);
 		long avgIndex=1;
 		double avegTotal = 0;
