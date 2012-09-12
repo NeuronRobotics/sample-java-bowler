@@ -42,7 +42,7 @@ public class DyIOChatBot implements IConversationFactory{
         DyIORegestry.setConnection(c);
         GoogleChatEngine eng = null;
 		try {
-			eng = new GoogleChatEngine(new DyIOConversationFactory(),f);
+			eng = new GoogleChatEngine(new DyIOConversationFactory(null),f);
 			//eng.startChat("mad.hephaestus@gmail.com");
 		} catch (XMPPException e1) {
 			// TODO Auto-generated catch block
