@@ -23,7 +23,7 @@ public class ImageToScad {
 	public void startGui() {
 		try {
 			//executeConversion("test.jpg", 32, 1, .1);
-			executeConversion("test2.jpg", 16, 1, .1);
+			executeConversion("test2.jpg", 64, 1, .1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -41,14 +41,14 @@ public class ImageToScad {
 		
 		File input = new File(inputFileName);
 		String outputFilename = inputFileName+".scad";
-		File outputInterm = new File(inputFileName+".interm.jpg");
+		//File outputInterm = new File(inputFileName+".interm.jpg");
 		
 		BufferedImage bi = ImageIO.read(input);
 		int height = (int) (((double)pixelWidth * (double)bi.getHeight())/(double)bi.getWidth());
 		BufferedImage scaled = ImageProcessingFactory.resize(bi, pixelWidth,height);
 		BufferedImage gray = ImageProcessingFactory.toGrayScale(scaled);
 		
-		ImageIO.write(gray, "jpg", outputInterm);
+		//ImageIO.write(gray, "jpg", outputInterm);
 		  try{
 			  // Create file 
 			  FileWriter fstream = new FileWriter(outputFilename);
@@ -63,12 +63,10 @@ public class ImageToScad {
 			  
 		
 		for(int x=0;x<pixelWidth;x++){
+			//DXFExport Xprt;
 			for(int y=0;y<height;y++){
-				Color c = ImageProcessingFactory.getColorAtLocation(gray, x, y);
-				
-				int depth = (int) (c.getRed()*depthScale);
-				//System.out.println("Depth value A="+c.getAlpha()+" R="+c.getRed()+" G="+c.getGreen()+" B="+c.getBlue());
-				String line = "cube(["+(int)(x*pixelSize)+","+(int)(y*pixelSize)+","+depth +"]);";
+
+				String line = "";
 				try {
 				    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(outputFilename, true)));
 				    out.println(line);
@@ -78,7 +76,9 @@ public class ImageToScad {
 				}
 			}
 		}
-		String exec = "openscad -o "+outputFilename+".stl  -D 'quality=\"production\"' "+outputFilename;
+		
+		
+		String exec = "openscad -o "+inputFileName+".stl  -D 'quality=\"production\"' "+outputFilename;
 		System.out.println("Running:\n"+exec);
 		Process p=Runtime.getRuntime().exec(exec); 
 		try {
@@ -97,5 +97,7 @@ public class ImageToScad {
 		System.out.println("Complete!");
 		return true;
 	}
+	
+	
 
 }
