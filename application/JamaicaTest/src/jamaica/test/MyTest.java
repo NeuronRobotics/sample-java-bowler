@@ -1,63 +1,78 @@
 package jamaica.test;
 
-import javax.realtime.PeriodicParameters;
-import javax.realtime.PriorityParameters;
+import javax.realtime.AbsoluteTime;
+import javax.realtime.Clock;
 import javax.realtime.PriorityScheduler;
-import javax.realtime.RealtimeThread;
+import javax.realtime.PriorityParameters;
+import javax.realtime.PeriodicParameters;
 import javax.realtime.RelativeTime;
+import javax.realtime.RealtimeThread;
 
 public class MyTest {
 
 	public static void main(String[] args) {
-		/* priority for new thread: min+10 */
-		int pri =
-		PriorityScheduler.instance().getMinPriority() + 20;
-		System.out.println("Priority = "+pri);
-		PriorityParameters prip = new PriorityParameters(pri);
-		/* period: 20ms */
-		final double ms=10;
-		RelativeTime period =
-		new RelativeTime((long) ms /* ms */, 0 /* ns */);
-		/* release parameters for periodic thread: */
-		PeriodicParameters perp =
-		new PeriodicParameters(null, period, null, null, null, null);
-		/* create periodic thread: */
-		RealtimeThread rt = new RealtimeThread(prip, perp)
-		{
-			public void run()
-			{
-				int n=1;
-				long start =System.nanoTime();
-				int num = 1000;
-				long times[] = new long[num]; 
-				boolean running=true;
-				while ( waitForNextPeriod() && running)
-				{
-					
-					times[n]=System.nanoTime();
-					n++;
-					if(n==num){
+		  final Clock clock = Clock.getRealtimeClock();
+		  RelativeTime resolution = clock.getResolution();
+		    long ms = clock.getTime().getMilliseconds();
+		    int ns = clock.getTime().getNanoseconds();
+		    double usResolution = (double)((resolution.getMilliseconds()*1000000)+resolution.getNanoseconds())/1000.0;
+		    System.out.println("Got 'ms: " + ms + "' - 'ns: " + ns + "'  resoulution = "+usResolution);
+		    if (ms < 0 || ns < 0 || ns > 999999 || usResolution>1) {
+		      System.out.println("Absolute time values are incorrect. Please set the system clock!");
+		      System.out.println("Got 'ms: " + ms + "' - 'ns: " + ns + "'  resoulution = "+usResolution);
+		      System.exit(1);
+		    }
 
-						running=false;
-					}else{
-						//System.out.println("Hello "+n);
+		    /* priority for new thread: mininum+10 */
+		    int priority = PriorityScheduler.instance().getMaxPriority();
+		    PriorityParameters priortyParameters = new PriorityParameters(priority);
+		    final long periodTime =Long.parseLong(args[0]);
+		    final long bound = Long.parseLong(args[1]);
+		    final long size =Long.parseLong(args[2]);
+		    /* period: 1ms */
+		    RelativeTime period = new RelativeTime( periodTime /* ms */, 0 /* ns */);
+
+		    /* release parameters for periodic thread: */
+		    PeriodicParameters periodicParameters = new PeriodicParameters(null,period, null,null,null,null);
+
+		    /* create periodic thread: */
+		    RealtimeThread realtimeThread = new RealtimeThread(priortyParameters,periodicParameters)
+		    {
+		      private AbsoluteTime time=new AbsoluteTime();
+		      private AbsoluteTime inital=new AbsoluteTime();
+			public void run()
+		      {
+					
+					long start,last = clock.getTime().getMilliseconds();
+					start=last;
+					
+					long data[]= new long[(int) size];
+					clock.getTime(inital);
+					for (int n=0;n<size;n++)
+					{
+
+					  waitForNextPeriod();
+					  clock.getTime(time);
+					  last=start;
+					  start = ((time.getNanoseconds()-inital.getNanoseconds()+((time.getMilliseconds()-inital.getMilliseconds())*1000000)))/1000;
+					  data[n]=(start-last);
+					  
 					}
-				}
-				if(running){
-					System.out.println("Failed");
-					System.exit(0);
-				}
-				System.out.println("Done");
-				for(int i=1;i<num;i++){
-					double interval = (double)(times[i]-(times[i-1]))/1000000.0;
-					if(interval>ms*1.01 || interval <ms*.99)
-						System.out.println("Hello "+i+" time = "+interval+" ms");
-				}
-			}
-		};
-		/* start periodic thread: */
-		rt.start();
-		System.out.println("Started test.");
+					int fail =0;
+					for (int n=1;n<size;n++)
+					{
+						long ms = data[n];
+						if(ms>(periodTime*1000)+bound || (ms<(periodTime*1000)-bound)){
+						  	System.out.println(n+" Hello " + (periodTime*1000*100)/ms);
+						  	fail++;
+						}
+					  
+					}
+					System.out.println("Failed "+fail+" times");
+		      }
+		    };
+		    /* start periodic thread: */
+		    realtimeThread.start();
 	}
 
 }
