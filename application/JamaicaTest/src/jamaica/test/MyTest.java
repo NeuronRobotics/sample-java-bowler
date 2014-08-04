@@ -8,6 +8,8 @@ import javax.realtime.PeriodicParameters;
 import javax.realtime.RelativeTime;
 import javax.realtime.RealtimeThread;
 
+import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 
 public class MyTest {
@@ -39,23 +41,22 @@ public class MyTest {
 		RelativeTime period = new RelativeTime(periodTime /* ms */, 0 /* ns */);
 
 		/* release parameters for periodic thread: */
-		PeriodicParameters periodicParameters = new PeriodicParameters(null,
-				period, null, null, null, null);
-
+		PeriodicParameters periodicParameters = new PeriodicParameters(null,period, null, null, null, null);
+		BowlerAbstractConnection.setUseThreadedStack(false);
+		final RealTimeDevice device = new RealTimeDevice();
+		Log.enableInfoPrint();
 		/* create periodic thread: */
-		RealtimeThread realtimeThread = new RealtimeThread(priortyParameters,
-				periodicParameters) {
+		RealtimeThread realtimeThread = new RealtimeThread(priortyParameters,periodicParameters) {
 			private AbsoluteTime time = new AbsoluteTime();
 			private AbsoluteTime inital = new AbsoluteTime();
-			private RealTimeDevice device;
 
 			public void run() {
-				device = new RealTimeDevice();
 				long start, last = clock.getTime().getMilliseconds();
 				start = last;
 
 				long data[] = new long[(int) size];
 				clock.getTime(inital);
+				System.out.println("Starting");
 				for (int n = 0; n < size; n++) {
 
 					waitForNextPeriod();
@@ -67,6 +68,7 @@ public class MyTest {
 					data[n] = (start - last);
 
 				}
+				System.out.println("Done");
 				int fail = 0;
 				for (int n = 1; n < size; n++) {
 					long ms = data[n];
