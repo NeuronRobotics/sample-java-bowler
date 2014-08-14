@@ -1,7 +1,7 @@
 killall aicasLicenseProvider
 ./aicasLicenseProvider &
 ant
-jamaicabuilder -jar target/HSMR-Controller.jar
+jamaicabuilder -jar HSMRI-device.jar
 #jamaicac -d classes src/jamaica/test/MyTest.java && jamaicabuilder -cp classes jamaica.test.MyTest
 
 

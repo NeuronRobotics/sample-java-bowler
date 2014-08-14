@@ -60,7 +60,7 @@ public class MyTest {
 				for (int n = 0; n < size; n++) {
 
 					waitForNextPeriod();
-					device.ping();
+					//device.ping();
 					clock.getTime(time);
 					last = start;
 					start = ((time.getNanoseconds() - inital.getNanoseconds() + ((time
