@@ -1,6 +1,10 @@
 package jamaica.test;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import sun.net.InetAddressCachePolicy;
 
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
@@ -12,7 +16,12 @@ import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 public class RealTimeDevice extends BowlerAbstractDevice{
 	private UDPBowlerConnection clnt;
 	public RealTimeDevice(){
-		clnt=new UDPBowlerConnection();
+		try {
+			clnt=new UDPBowlerConnection(InetAddress.getByName("192.168.1.10"));
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		setConnection(clnt);
 		connect();
 	}

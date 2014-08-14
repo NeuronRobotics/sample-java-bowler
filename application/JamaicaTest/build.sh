@@ -3,6 +3,7 @@ killall aicasLicenseProvider
 ant
 jamaicabuilder -jar HSMRI-device.jar
 
-./jamaica.test.MyTest 10 90 10000
+sudo nice --10 ./jamaica.test.MyTest 1 50 1000
+
 
 
