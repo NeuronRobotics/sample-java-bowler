@@ -9,7 +9,7 @@ import javax.realtime.RelativeTime;
 import javax.realtime.RealtimeThread;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
-import com.neuronrobotics.sdk.common.Log;
+//import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 
 public class MyTest {
@@ -44,7 +44,7 @@ public class MyTest {
 		PeriodicParameters periodicParameters = new PeriodicParameters(null,period, null, null, null, null);
 		BowlerAbstractConnection.setUseThreadedStack(false);
 		final RealTimeDevice device = new RealTimeDevice();
-		Log.enableInfoPrint();
+		//Log.enableInfoPrint();
 		/* create periodic thread: */
 		RealtimeThread realtimeThread = new RealtimeThread(priortyParameters,periodicParameters) {
 			private AbsoluteTime time = new AbsoluteTime();
@@ -60,7 +60,7 @@ public class MyTest {
 				for (int n = 0; n < size; n++) {
 
 					waitForNextPeriod();
-					//device.ping();
+					device.fastPushTest();
 					clock.getTime(time);
 					last = start;
 					start = ((time.getNanoseconds() - inital.getNanoseconds() + ((time
