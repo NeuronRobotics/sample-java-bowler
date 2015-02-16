@@ -45,7 +45,7 @@ public class MyTest {
 			/* release parameters for periodic thread: */
 			PeriodicParameters periodicParameters = new PeriodicParameters(
 					null, period, null, null, null, null);
-			BowlerAbstractConnection.setUseThreadedStack(false);
+			
 			final RealTimeDevice device = new RealTimeDevice();
 			// Log.enableInfoPrint();
 			/* create periodic thread: */

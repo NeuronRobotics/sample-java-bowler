@@ -9,23 +9,8 @@
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="/home/aimlab/git/sample-java-bowler/application/JamaicaTest/bin"/>
-            <fileset dir="/home/aimlab/git/java-bowler/test/java/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib/Jama-1.0.2.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib/bluecove-2.1.1.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib/bluecove-gpl-2.1.1.jar"/>
             <fileset dir="/home/aimlab/git/java-bowler/javasdk/NRSDK/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib_addons/j3dcore.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib_addons/j3dutils.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib_addons/miglayout-3.7.2-swing.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib_addons/motej.0.9.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib_addons/vecmath.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib_addons/nr-jinput.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib_addons/smack.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib_addons/smackx.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib/nrjavaserial-3.9.0.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/test/java/lib/PIDSIm.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/usr/share/eclipse/dropins/jdt/plugins/org.junit_4.8.2.dist/junit.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/usr/share/eclipse/dropins/jdt/plugins/org.hamcrest.core_1.3.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/aimlab/git/java-bowler/javasdk/NRSDK/lib/Jama-1.0.2.jar"/>
         </jar>
     </target>
 </project>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NRDK_Test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NRSDK"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/com.aicas.jamaica.eclipse.launcher.vm.JamaicaVMType/jamaica-6.2-5"/>
 	<classpathentry kind="output" path="bin"/>
