@@ -55,45 +55,55 @@ public class MyTest {
 				public void run() {
 
 					AbsoluteTime data[] = new AbsoluteTime[(int) size];
+					AbsoluteTime completed[] = new AbsoluteTime[(int) size];
 					for (int i = 0; i < data.length; i++) {
 						data[i] = new AbsoluteTime();
+						completed[i] = new AbsoluteTime();
 					}
 					
-					System.out.println("Starting");
+					System.out.println("Starting Period = "+periodTime+"ms Percent Jitter = "+bound+" for "+ size+" iterations");
 					device.fastPushTest();
 					for (int n = 0; n < size; n++) {
 
 						waitForNextPeriod();
 						clock.getTime(data[n]);
+						device.fastPushTest();
+						clock.getTime(completed[n]);
 						if (device.getLastResponse() == null) {
 							throw new RuntimeException("No response after " + n);
 						}
-						device.fastPushTest();
 
 					}
 					System.out.println("Done");
 					int fail = 0;
 					RelativeTime difference = new RelativeTime();
+					RelativeTime exec = new RelativeTime();
 					double period = (double) periodTime * 1000.0;
 					for (int n = 1; n < size; n++) {
-						data[n].subtract(data[0], difference);
+						completed[n].subtract(data[n], exec);
 						
+						data[n].subtract(data[0], difference);
 						double timeInUs = ((double) difference.getMilliseconds()
 								* 1000.0) + ((double) difference.getNanoseconds()
 								/ 1000.0);
-						int expected = (int) (period * n+1);
+						int expected = (int) (period * n);
 						
 						double differenceElapsed = (expected - timeInUs);
 						
 						
 						int percent = (int) ((differenceElapsed/ period) * 100.0);
+						
 						if (percent > bound || percent < (-bound)) {
 							System.out.println("Packet #" + n + " elapsed="
-									+ (int) timeInUs + "us, expected="+(int)expected+"us, difference="+differenceElapsed+"us, " + percent + " %");
+									+ difference + " , expected="+(int)periodTime+"ms, difference="+difference+"us, " + percent + " %"+" took ="+ exec);
 							fail++;
+						}else{
+							System.out.println("Packet #" + n + 
+									" took ="+ exec);
 						}
 					}
 					System.out.println("Failed " + fail + " times");
+					System.out.println("Period = "+periodTime+"ms Percent Jitter = "+bound+" for "+ size+" iterations");
 					System.exit(0);
 				}
 			};

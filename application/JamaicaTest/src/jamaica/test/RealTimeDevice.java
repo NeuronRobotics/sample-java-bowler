@@ -16,13 +16,16 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
+import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class RealTimeDevice extends BowlerAbstractDevice {
 	private UDPBowlerConnection clnt;
-	ByteList bytesToPacketBuffer = new ByteList();
-	
+	private ByteList bytesToPacketBuffer = new ByteList();
+	private RpcEncapsulation rpc;
+	private  int[] positions = new int[10];
+	private  int[] velocities = new int[10];
 	private class LoaderThread extends Thread{
 		private boolean run=true;
 		BowlerDatagram gd;
@@ -70,12 +73,14 @@ public class RealTimeDevice extends BowlerAbstractDevice {
 	}
 	
 	
-
+	
 	public void fastPushTest() {
-		BowlerAbstractCommand command = getConnection().getCommand("hsmri.*", 
-																	BowlerMethod.POST, 
-																	"sync", 
-																	new Object[]{new int[20]});
+		if(rpc == null ){
+			rpc = getConnection().locateRpc("hsmri.*", BowlerMethod.POST, "sync");
+		}
+		
+		BowlerAbstractCommand command =rpc.getCommand(new Object[]{velocities});
+		
 		if(command == null)
 			throw new RuntimeException("Command failed to parse "+getConnection());
 		BowlerDatagram cmd = BowlerDatagramFactory.build(new MACAddress(),
