@@ -75,11 +75,15 @@ public class RealTimeDevice extends BowlerAbstractDevice {
 	
 	
 	public void fastPushTest() {
-		if(rpc == null ){
-			rpc = getConnection().locateRpc("hsmri.*", BowlerMethod.POST, "sync");
+		if(getRpc() == null ){
+			setRpc(getConnection().locateRpc("hsmri.*", BowlerMethod.POST, "sync"));
 		}
 		
-		BowlerAbstractCommand command =rpc.getCommand(new Object[]{velocities});
+		for(int i= 0;i<velocities.length;i++){
+			velocities [i] = 1000 - positions[i];
+		}
+		
+		BowlerAbstractCommand command =getRpc().getCommand(new Object[]{velocities});
 		
 		if(command == null)
 			throw new RuntimeException("Command failed to parse "+getConnection());
@@ -105,13 +109,39 @@ public class RealTimeDevice extends BowlerAbstractDevice {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return getConnection().getLastSyncronousResponse();
+		BowlerDatagram dg = getConnection().getLastSyncronousResponse();
+		if(dg != null){
+			// process packet
+			if(dg.getRPC().contains("sync")){
+				Integer [] vals = (Integer[]) getRpc().parseResponse(dg)[0];
+				//System.out.println(vals);
+				for(int i= 0;i<vals.length;i++){
+					positions[i]=vals[i];
+				}
+				getConnection().clearLastSyncronousResponse();
+				return dg;
+			}
+		}
+		
+		return null;
 	}
 
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub
 
+	}
+
+
+
+	public RpcEncapsulation getRpc() {
+		return rpc;
+	}
+
+
+
+	public void setRpc(RpcEncapsulation rpc) {
+		this.rpc = rpc;
 	}
 
 }

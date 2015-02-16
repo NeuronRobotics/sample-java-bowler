@@ -66,11 +66,11 @@ public class MyTest {
 					for (int n = 0; n < size; n++) {
 
 						waitForNextPeriod();
-						clock.getTime(data[n]);
+						//clock.getTime(data[n]);
 						device.fastPushTest();
-						clock.getTime(completed[n]);
+						//clock.getTime(completed[n]);
 						if (device.getLastResponse() == null) {
-							throw new RuntimeException("No response after " + n);
+							throw new RuntimeException("No response");
 						}
 
 					}
@@ -95,7 +95,7 @@ public class MyTest {
 						
 						if (percent > bound || percent < (-bound)) {
 							System.out.println("Packet #" + n + " elapsed="
-									+ difference + " , expected="+(int)periodTime+"ms, difference="+difference+"us, " + percent + " %"+" took ="+ exec);
+									+ difference + " , expected="+(int)periodTime*n+"ms, difference="+difference+", " + percent + " %"+" send took ="+ exec);
 							fail++;
 						}else{
 							System.out.println("Packet #" + n + 
